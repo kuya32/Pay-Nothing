@@ -94,10 +94,10 @@ public class SetUpActivity extends AppCompatActivity {
 
     private void saveData() {
         savingDataProgressCardView.setVisibility(View.VISIBLE);
-        username = usernameInput.getEditText().toString();
-        firstName = firstNameInput.getEditText().toString();
-        lastName = lastNameInput.getEditText().toString();
-        phoneNumber = phoneNumberInput.getEditText().toString();
+        username = usernameInput.getEditText().getText().toString();
+        firstName = firstNameInput.getEditText().getText().toString();
+        lastName = lastNameInput.getEditText().getText().toString();
+        phoneNumber = phoneNumberInput.getEditText().getText().toString();
 
         if (username.isEmpty() || username.length() < 3) {
             showError(usernameInput, "Username must be longer than 3 characters!");
@@ -105,7 +105,7 @@ public class SetUpActivity extends AppCompatActivity {
             showError(firstNameInput, "Required field!");
         } else if (lastName.isEmpty()) {
             showError(lastNameInput, "Required field!");
-        } else if (phoneNumber.isEmpty() || phoneNumber.length() < 14) {
+        } else if (phoneNumber.isEmpty() || phoneNumber.length() < 13) {
             showError(phoneNumberInput, "Input should match example!");
         } else if (uri == null) {
             Toast.makeText(this, "Please select an image!", Toast.LENGTH_SHORT).show();
