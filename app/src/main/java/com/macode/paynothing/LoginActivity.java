@@ -75,9 +75,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void attemptLogin() {
         email = loginEmailInput.getEditText().getText().toString();
-        System.out.println(email);
         password = loginPasswordInput.getEditText().getText().toString();
-        System.out.println(password);
         if (email.isEmpty()) {
             showError(loginEmailInput, "Email is not valid!");
         } else if (password.isEmpty() || password.length() < 5) {
