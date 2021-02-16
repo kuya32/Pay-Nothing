@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "96959966626",
+    "project_id": "pay-nothing",
+    "storage_bucket": "pay-nothing.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:96959966626:android:8a26c3cd92a4c8514356fb",
+        "android_client_info": {
+          "package_name": "com.macode.paynothing"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "96959966626-b27bsbilooi32i10a8e2dbm0mpec88dr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDTt7BnEHhoqSjJxdzlB5HkhHE6N6KX8Tw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "96959966626-b27bsbilooi32i10a8e2dbm0mpec88dr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
