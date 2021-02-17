@@ -1,14 +1,217 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/gray"
     tools:context=".fragments.postItem.PostItemLocationFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <RelativeLayout
+        android:id="@+id/mainLocationRelativeLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <include
+                android:id="@+id/postItemLocationToolbar"
+                layout="@layout/post_item_toolbar"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/postItemLocationText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="45dp"
+                android:background="@drawable/spinner_border"
+                android:padding="10dp"
+                android:text="Select a location ->"
+                android:textColor="@color/white"
+                android:textSize="22sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/postItemLocationToolbar" />
+
+            <TextView
+                android:id="@+id/postItemLocationEditText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="30dp"
+                android:linksClickable="true"
+                android:text="Edit"
+                android:textColor="@color/white"
+                android:textSize="22sp"
+                android:textStyle="italic"
+                app:layout_constraintBottom_toBottomOf="@+id/postItemLocationText"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/postItemLocationText" />
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/pickUpOnlySwitch"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:text="Pick-Up Only"
+                android:textColor="@color/white"
+                android:textOff="No"
+                android:textOn="Yes"
+                android:textSize="22sp"
+                app:layout_constraintEnd_toEndOf="@+id/postItemLocationEditText"
+                app:layout_constraintStart_toStartOf="@+id/postItemLocationText"
+                app:layout_constraintTop_toBottomOf="@+id/postItemLocationText"
+                app:showText="true" />
+
+            <Button
+                android:id="@+id/postItemLocationSubmitButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/primaryColor"
+                android:text="Submit"
+                android:textColor="@color/secondaryColor"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/postingItemProgressCardView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="invisible"
+                app:cardBackgroundColor="@color/primaryColor"
+                app:cardCornerRadius="25dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/postingItemProgressBarTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:gravity="center"
+                        android:padding="8dp"
+                        android:text="Posting Item..."
+                        android:textColor="@color/secondaryColor"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <ProgressBar
+                        android:id="@+id/postingItemProgressBar"
+                        style="?android:attr/progressBarStyle"
+                        android:layout_width="150dp"
+                        android:layout_height="150dp"
+                        android:padding="10dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.498"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/postingItemProgressBarTitle"
+                        app:layout_constraintVertical_bias="0.499" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.cardview.widget.CardView>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/getLocationRelativeLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:visibility="invisible">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <Button
+                android:id="@+id/postItemGetLocationButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="100dp"
+                android:layout_marginEnd="30dp"
+                android:backgroundTint="@color/primaryColor"
+                android:text="Get Current Location"
+                android:textColor="@color/secondaryColor"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.491"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/orTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:text="OR"
+                android:textColor="@color/white"
+                android:textSize="30sp"
+                app:layout_constraintEnd_toEndOf="@+id/postItemGetLocationButton"
+                app:layout_constraintStart_toStartOf="@+id/postItemGetLocationButton"
+                app:layout_constraintTop_toBottomOf="@+id/postItemGetLocationButton" />
+
+            <EditText
+                android:id="@+id/postItemZipCode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="30dp"
+                android:background="@drawable/spinner_border"
+                android:gravity="center"
+                android:hint="Zip Code"
+                android:maxLength="5"
+                android:padding="10dp"
+                android:textColor="@color/white"
+                android:textColorHint="@color/white"
+                android:textSize="25sp"
+                app:layout_constraintEnd_toEndOf="@+id/orTextView"
+                app:layout_constraintStart_toStartOf="@+id/orTextView"
+                app:layout_constraintTop_toBottomOf="@+id/orTextView" />
+
+            <TextView
+                android:id="@+id/postItemLocationCityAndStateText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:gravity="center"
+                android:textColor="@color/white"
+                android:textSize="25sp"
+                app:layout_constraintEnd_toEndOf="@+id/postItemGetLocationButton"
+                app:layout_constraintStart_toStartOf="@+id/postItemGetLocationButton"
+                app:layout_constraintTop_toBottomOf="@+id/postItemZipCode" />
+
+            <Button
+                android:id="@+id/postItemApplyCityAndStateButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/primaryColor"
+                android:text="Apply"
+                android:textColor="@color/secondaryColor"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </RelativeLayout>
+
 
 </FrameLayout>
