@@ -304,7 +304,7 @@ public class PostItemLocationFragment extends Fragment {
                         @Override
                         public void onSuccess(Uri uri) {
                             HashMap hashMap = new HashMap();
-                            hashMap.put("postItemDate", stringDate);
+                            hashMap.put("dateItemPosted", stringDate);
                             hashMap.put("title", itemTitleString);
                             hashMap.put("imageUrl", uri.toString());
                             hashMap.put("category", itemCategoryString);
