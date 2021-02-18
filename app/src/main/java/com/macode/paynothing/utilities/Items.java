@@ -2,16 +2,17 @@ package com.macode.paynothing.utilities;
 
 public class Items {
 
-    private String userId, title, image, category, condition, brand, model, type, description, location, latitude, longitude;
+    private String dateItemPosted, userId, title, imageUrl, category, condition, brand, model, type, description, location, latitude, longitude;
     private Boolean pickUpOnly;
 
     public Items() {
     }
 
-    public Items(String userId, String title, String image, String category, String condition, String brand, String model, String type, String description, String location, String latitude, String longitude, Boolean pickUpOnly) {
+    public Items(String dateItemPosted, String userId, String title, String imageUrl, String category, String condition, String brand, String model, String type, String description, String location, String latitude, String longitude, Boolean pickUpOnly) {
+        this.dateItemPosted = dateItemPosted;
         this.userId = userId;
         this.title = title;
-        this.image = image;
+        this.imageUrl = imageUrl;
         this.category = category;
         this.condition = condition;
         this.brand = brand;
@@ -22,6 +23,14 @@ public class Items {
         this.latitude = latitude;
         this.longitude = longitude;
         this.pickUpOnly = pickUpOnly;
+    }
+
+    public String getDateItemPosted() {
+        return dateItemPosted;
+    }
+
+    public void setDateItemPosted(String dateItemPosted) {
+        this.dateItemPosted = dateItemPosted;
     }
 
     public String getUserId() {
@@ -40,12 +49,12 @@ public class Items {
         this.title = title;
     }
 
-    public String getImage() {
-        return image;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
-    public void setImage(String image) {
-        this.image = image;
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
     public String getCategory() {
