@@ -83,7 +83,6 @@ public class MainActivity extends AppCompatActivity {
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer, fragment).commit();
             } else if (item.getItemId() == R.id.post) {
                 startActivity(new Intent(MainActivity.this, PostActivity.class));
-                finish();
             } else if (item.getItemId() == R.id.sell) {
                 fragment = new SellFragment();
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer, fragment).commit();

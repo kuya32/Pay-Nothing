@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ItemDetailActivity">
+
+    <include
+        android:id="@+id/itemDetailToolbar"
+        layout="@layout/main_toolbar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ScrollView
+        android:id="@+id/itemDetailScroll"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/itemDetailEditButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/itemDetailToolbar">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/itemDetailImageView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:adjustViewBounds="true"
+                android:scaleType="fitStart"
+                android:src="@drawable/profile_image"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/itemDetailTitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:hint="Some Item"
+                android:textColor="@color/white"
+                android:textColorHint="@color/white"
+                android:textSize="30sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="@+id/itemDetailImageView"
+                app:layout_constraintStart_toStartOf="@+id/itemDetailImageView"
+                app:layout_constraintTop_toBottomOf="@+id/itemDetailImageView" />
+
+            <TextView
+                android:id="@+id/itemDetailLocation"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:hint="Some time at some location"
+                android:textColor="@color/white"
+                android:textColorHint="@color/white"
+                android:textSize="20sp"
+                app:layout_constraintEnd_toEndOf="@+id/itemDetailTitle"
+                app:layout_constraintStart_toStartOf="@+id/itemDetailTitle"
+                app:layout_constraintTop_toBottomOf="@+id/itemDetailTitle" />
+
+            <TextView
+                android:id="@+id/itemDetailCategory"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:hint="booty stuff"
+                android:textColor="@color/white"
+                android:textColorHint="@color/white"
+                android:textSize="20sp"
+                app:layout_constraintEnd_toEndOf="@+id/itemDetailLocation"
+                app:layout_constraintStart_toStartOf="@+id/itemDetailLocation"
+                app:layout_constraintTop_toBottomOf="@+id/itemDetailLocation" />
+
+            <TextView
+                android:id="@+id/itemDetailCondition"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:hint="wrecked"
+                android:textColor="@color/white"
+                android:textColorHint="@color/white"
+                android:textSize="20sp"
+                app:layout_constraintEnd_toEndOf="@+id/itemDetailCategory"
+                app:layout_constraintStart_toStartOf="@+id/itemDetailCategory"
+                app:layout_constraintTop_toBottomOf="@+id/itemDetailCategory" />
+
+            <TextView
+                android:id="@+id/itemDetailPickUpOnly"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/item_detail_bottom_border"
+                android:hint="Pick Up Only"
+                android:textColor="@color/white"
+                android:textColorHint="@color/white"
+                android:textSize="20sp"
+                app:layout_constraintEnd_toEndOf="@+id/itemDetailCondition"
+                app:layout_constraintStart_toStartOf="@+id/itemDetailCondition"
+                app:layout_constraintTop_toBottomOf="@+id/itemDetailCondition" />
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardView"
+                android:layout_width="0dp"
+                android:layout_height="100dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/item_detail_bottom_border"
+                app:cardBackgroundColor="@color/primaryColor"
+                app:layout_constraintEnd_toEndOf="@+id/itemDetailPickUpOnly"
+                app:layout_constraintStart_toStartOf="@+id/itemDetailPickUpOnly"
+                app:layout_constraintTop_toBottomOf="@+id/itemDetailPickUpOnly">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/itemDetailSellerImage"
+                        android:layout_width="100dp"
+                        android:layout_height="0dp"
+                        android:layout_margin="5dp"
+                        android:src="@drawable/profile_image"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/itemDetailSellerName"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:hint="A person"
+                        android:textStyle="bold"
+                        android:textColor="@color/secondaryColor"
+                        android:textColorHint="@color/secondaryColor"
+                        android:textSize="20sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/itemDetailSellerImage"
+                        app:layout_constraintTop_toTopOf="@+id/itemDetailSellerImage" />
+
+                    <TextView
+                        android:id="@+id/loyalty"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:hint="Long time"
+                        android:textColor="@color/secondaryColor"
+                        android:textColorHint="@color/secondaryColor"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="@+id/itemDetailSellerImage"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/itemDetailSellerImage"
+                        app:layout_constraintTop_toBottomOf="@+id/itemDetailSellerName" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.cardview.widget.CardView>
+
+            <TextView
+                android:id="@+id/divider"
+                android:layout_width="0dp"
+                android:layout_height="2dp"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/item_detail_bottom_border"
+                app:layout_constraintEnd_toEndOf="@+id/cardView"
+                app:layout_constraintStart_toStartOf="@+id/cardView"
+                app:layout_constraintTop_toBottomOf="@id/cardView" />
+
+            <TextView
+                android:id="@+id/itemDetailDescriptionTitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="Description"
+                android:textColor="@color/white"
+                android:textSize="30sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="@+id/divider"
+                app:layout_constraintStart_toStartOf="@+id/divider"
+                app:layout_constraintTop_toBottomOf="@+id/divider" />
+
+
+            <TextView
+                android:id="@+id/itemDetailBrand"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="Brand: N/A"
+                android:layout_marginTop="5dp"
+                android:textColorHint="@color/white"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                app:layout_constraintEnd_toEndOf="@+id/itemDetailDescriptionTitle"
+                app:layout_constraintStart_toStartOf="@+id/itemDetailDescriptionTitle"
+                app:layout_constraintTop_toBottomOf="@+id/itemDetailDescriptionTitle" />
+
+            <TextView
+                android:id="@+id/itemDetailModel"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:hint="Model: N/A"
+                android:textColor="@color/white"
+                android:textColorHint="@color/white"
+                android:textSize="20sp"
+                app:layout_constraintEnd_toEndOf="@+id/itemDetailBrand"
+                app:layout_constraintStart_toStartOf="@+id/itemDetailBrand"
+                app:layout_constraintTop_toBottomOf="@+id/itemDetailBrand" />
+
+            <TextView
+                android:id="@+id/itemDetailType"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:hint="Type: N/A"
+                android:textColor="@color/white"
+                android:textColorHint="@color/white"
+                android:textSize="20sp"
+                app:layout_constraintEnd_toEndOf="@+id/itemDetailModel"
+                app:layout_constraintStart_toStartOf="@+id/itemDetailModel"
+                app:layout_constraintTop_toBottomOf="@+id/itemDetailModel" />
+
+            <TextView
+                android:id="@+id/itemDetailDescription"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/item_detail_bottom_border"
+                android:hint="Blah Blah Blah"
+                android:textColor="@color/white"
+                android:textColorHint="@color/white"
+                android:textSize="20sp"
+                app:layout_constraintEnd_toEndOf="@+id/itemDetailType"
+                app:layout_constraintStart_toStartOf="@+id/itemDetailType"
+                app:layout_constraintTop_toBottomOf="@+id/itemDetailType" />
+
+            <fragment
+                android:id="@+id/itemDetailGoogleMap"
+                android:name="com.google.android.gms.maps.SupportMapFragment"
+                android:layout_width="0dp"
+                android:layout_height="300dp"
+                android:layout_marginTop="20dp"
+                android:adjustViewBounds="true"
+                android:scaleType="fitStart"
+                app:layout_constraintEnd_toEndOf="@+id/itemDetailDescription"
+                app:layout_constraintStart_toStartOf="@+id/itemDetailDescription"
+                app:layout_constraintTop_toBottomOf="@+id/itemDetailDescription" />
+
+            <TextView
+                android:id="@+id/itemDetailGoogleMapMessage"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="20dp"
+                android:text="Map is approximate to keep seller's location private."
+                android:textColor="@color/white"
+                android:textColorHint="@color/white"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/itemDetailGoogleMap"
+                app:layout_constraintStart_toStartOf="@+id/itemDetailGoogleMap"
+                app:layout_constraintTop_toBottomOf="@+id/itemDetailGoogleMap" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
+
+    <Button
+        android:id="@+id/itemDetailEditButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/primaryColor"
+        android:text="Edit"
+        android:textColor="@color/secondaryColor"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -2,4 +2,33 @@
     <string name="app_name">Pay Nothing</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string-array name="categories">
+        <item>Electronics &amp; Media</item>
+        <item>Home &amp; Garden</item>
+        <item>Clothing, Shoes &amp; Accessories</item>
+        <item>Baby &amp; Kids</item>
+        <item>Vehicles</item>
+        <item>Toys, Games, &amp; Hobbies</item>
+        <item>Sports &amp; Outdoors</item>
+        <item>Collection &amp; Art</item>
+        <item>Pet supplies</item>
+        <item>Health &amp; Beauty</item>
+        <item>Business equipment</item>
+        <item>Tickets</item>
+        <item>General</item>
+    </string-array>
+    <string-array name="condition">
+        <item>New</item>
+        <item>Reconditioned/Certified</item>
+        <item>Open box (never used)</item>
+        <item>Used (normal wear)</item>
+        <item>For parts</item>
+        <item>Other (see description)</item>
+    </string-array>
+    <string name="title_activity_edit_item">EditItemActivity</string>
+    <!--
+    This string is used for square devices and overridden by hello_world in
+    values-round/strings.xml for round devices.
+    -->
+    <string name="hello_world">Hello Square World!</string>
 </resources>

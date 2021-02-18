@@ -31,6 +31,8 @@ import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -98,6 +100,9 @@ public class SetUpActivity extends AppCompatActivity {
         firstName = firstNameInput.getEditText().getText().toString();
         lastName = lastNameInput.getEditText().getText().toString();
         phoneNumber = phoneNumberInput.getEditText().getText().toString();
+        Date date = new Date();
+        SimpleDateFormat format = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
+        final String stringDate = format.format(date);
 
         if (username.isEmpty() || username.length() < 3) {
             showError(usernameInput, "Username must be longer than 3 characters!");
@@ -118,6 +123,7 @@ public class SetUpActivity extends AppCompatActivity {
                             @Override
                             public void onSuccess(Uri uri) {
                                 HashMap hashMap = new HashMap();
+                                hashMap.put("dateUserCreated", stringDate);
                                 hashMap.put("username", username);
                                 hashMap.put("firstName", firstName);
                                 hashMap.put("lastName", lastName);
