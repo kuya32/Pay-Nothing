@@ -17,12 +17,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.PayNothing">
-        <activity android:name=".activities.OtherItemDetailActivity" />
-        <activity android:name=".EditItemActivity" />
-        <activity
-            android:name=".ItemDetailActivity"
-            android:parentActivityName=".MainActivity" />
-
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
@@ -30,6 +24,13 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_api_key" />
 
+        <activity
+            android:name=".activities.OtherItemDetailActivity"
+            android:parentActivityName=".MainActivity" />
+        <activity android:name=".EditItemActivity" />
+        <activity
+            android:name=".ItemDetailActivity"
+            android:parentActivityName=".MainActivity" />
         <activity android:name=".PostActivity" />
         <activity android:name=".ForgotPasswordActivity" />
         <activity android:name=".SignUpActivity" />
