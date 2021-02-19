@@ -1,66 +1,136 @@
 package com.macode.paynothing.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.macode.paynothing.AccountSettingsActivity;
+import com.macode.paynothing.LoginActivity;
+import com.macode.paynothing.PublicProfileActivity;
 import com.macode.paynothing.R;
+import com.macode.paynothing.SavedItemsActivity;
+import com.squareup.picasso.Picasso;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link AccountFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class AccountFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private Toolbar accountToolbar;
+    private CircleImageView profileImage;
+    private TextView accountUserName, accountUserLocation, accountSavedItems, accountSettings, accountPublicProfile;
+    private String profileImageUrl, firstName, lastName, location;
+    private Button logoutButton;
+    private FirebaseAuth firebaseAuth;
+    private FirebaseUser firebaseUser;
+    private DatabaseReference userReference;
 
     public AccountFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment AccountFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static AccountFragment newInstance(String param1, String param2) {
-        AccountFragment fragment = new AccountFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_account, container, false);
+        View view = inflater.inflate(R.layout.fragment_account, container, false);
+
+        accountToolbar = view.findViewById(R.id.accountToolbar);
+        profileImage = view.findViewById(R.id.accountUserProfileImage);
+        accountUserName = view.findViewById(R.id.accountUserName);
+        accountUserLocation = view.findViewById(R.id.accountUserLocation);
+        accountSavedItems = view.findViewById(R.id.accountSavedItemsText);
+        accountSettings = view.findViewById(R.id.accountSettingsText);
+        accountPublicProfile = view.findViewById(R.id.accountPublicProfileText);
+        logoutButton = view.findViewById(R.id.accountLogoutButton);
+        firebaseAuth = FirebaseAuth.getInstance();
+        firebaseUser = firebaseAuth.getCurrentUser();
+        userReference = FirebaseDatabase.getInstance().getReference().child("Users");
+
+        ((AppCompatActivity) requireActivity()).setSupportActionBar(accountToolbar);
+        ((AppCompatActivity) requireActivity()).getSupportActionBar().setTitle("Account");
+        setHasOptionsMenu(true);
+
+        retrieveUserAccountInfo();
+
+        accountSavedItems.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(requireActivity(), SavedItemsActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        accountSettings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(requireActivity(), AccountSettingsActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        accountPublicProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(requireActivity(), PublicProfileActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        logoutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                firebaseAuth.signOut();
+                Intent intent = new Intent(requireActivity(), LoginActivity.class);
+                startActivity(intent);
+                requireActivity().finish();
+            }
+        });
+
+        return view;
+    }
+
+    private void retrieveUserAccountInfo() {
+        userReference.child(firebaseUser.getUid()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    profileImageUrl = snapshot.child("profileImage").getValue().toString();
+                    firstName = snapshot.child("firstName").getValue().toString();
+                    lastName = snapshot.child("lastName").getValue().toString();
+                    location = snapshot.child("location").getValue().toString();
+
+                    Picasso.get().load(profileImageUrl).into(profileImage);
+                    accountUserName.setText(String.format("%s %s", firstName, lastName));
+                    accountUserLocation.setText(location);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 }
