@@ -31,8 +31,7 @@
             android:value="@string/google_maps_api_key" />
 
         <activity
-            android:name=".activities.OtherItemDetailActivity"
-            android:parentActivityName=".MainActivity" />
+            android:name=".activities.OtherItemDetailActivity" />
         <activity android:name=".EditItemActivity" />
         <activity
             android:name=".ItemDetailActivity"

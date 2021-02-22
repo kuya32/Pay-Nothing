@@ -2,14 +2,26 @@ package com.macode.paynothing.activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 
+import android.content.ClipData;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.Icon;
 import android.os.Bundle;
 import android.util.Base64;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -23,6 +35,9 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -30,10 +45,15 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.database.core.Context;
 import com.macode.paynothing.EditItemActivity;
 import com.macode.paynothing.ItemDetailActivity;
 import com.macode.paynothing.R;
 import com.squareup.picasso.Picasso;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -44,10 +64,12 @@ public class OtherItemDetailActivity extends AppCompatActivity implements OnMapR
     private ImageView itemDetailImage;
     private String itemKey, otherUserId, itemTitle, itemImage, itemCategory,  itemCondition, itemBrand, itemModel, itemType, itemDescription, itemLocation, itemPickUpOnly, itemLat, itemLong, itemSellerImageUrl, itemSellerUsername, loyaltyString;
     private TextView itemDetailTitle, itemDetailLocation, itemDetailCategory, itemDetailCondition, itemDetailPickUpOnly, itemDetailSellerUsername, itemDetailBrand, itemDetailModel, itemDetailType, itemDetailDescription, loyalty;
-    private Boolean itemPickUp;
+    private Boolean itemPickUp, isSaved = false;
     private FirebaseAuth firebaseAuth;
     private FirebaseUser firebaseUser;
-    private DatabaseReference userReference, itemReference;
+    private DatabaseReference userReference, itemReference, savedItemReference;
+    private MenuItem savedItem;
+    private Menu otherItemDetailTopMenu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +94,7 @@ public class OtherItemDetailActivity extends AppCompatActivity implements OnMapR
         firebaseUser = firebaseAuth.getCurrentUser();
         userReference = FirebaseDatabase.getInstance().getReference().child("Users");
         itemReference = FirebaseDatabase.getInstance().getReference().child("Items");
+        savedItemReference = FirebaseDatabase.getInstance().getReference().child("SavedItems");
 
         retrieveExtraData();
         otherUserId = itemKey.substring(0, itemKey.indexOf(" "));
@@ -89,6 +112,95 @@ public class OtherItemDetailActivity extends AppCompatActivity implements OnMapR
             Toast.makeText(this, "Null Map Fragment", Toast.LENGTH_LONG).show();
         }
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.other_item_detail_top_menu, menu);
+        this.otherItemDetailTopMenu = menu;
+        checkIfItemIsSaved();
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if ((item.getItemId() == R.id.saveItem && isSaved)) {
+            removedSavedItem();
+            isSaved = false;
+        } else if (item.getItemId() == R.id.saveItem && !isSaved) {
+            saveItem(itemKey);
+            isSaved = true;
+        } else if (item.getItemId() == android.R.id.home) {
+            finish();
+        }
+        invalidateOptionsMenu();
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        if (isSaved) {
+            savedItem = menu.findItem(R.id.saveItem)
+                    .setIcon(R.drawable.ic_unsaved);
+        } else {
+            savedItem = menu.findItem(R.id.saveItem)
+                    .setIcon(R.drawable.ic_saved);
+        }
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    private void checkIfItemIsSaved() {
+        savedItemReference.child(firebaseUser.getUid()).child(itemKey).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.child("title").exists()) {
+                    isSaved = true;
+                    savedItem = otherItemDetailTopMenu.findItem(R.id.saveItem);
+                    savedItem.setIcon(R.drawable.ic_saved);
+                } else {
+                    isSaved = false;
+                    savedItem = otherItemDetailTopMenu.findItem(R.id.saveItem);
+                    savedItem.setIcon(R.drawable.ic_unsaved);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    private void saveItem(String itemKey) {
+        Date date = new Date();
+        SimpleDateFormat format = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
+        final String stringDate = format.format(date);
+        HashMap hashMap = new HashMap();
+        hashMap.put("title", itemTitle);
+        hashMap.put("imageUrl", itemImage);
+        hashMap.put("dateItemSaved", stringDate);
+        savedItemReference.child(firebaseUser.getUid()).child(itemKey).updateChildren(hashMap).addOnSuccessListener(new OnSuccessListener() {
+            @Override
+            public void onSuccess(Object o) {
+                isSaved = true;
+                Toast.makeText(OtherItemDetailActivity.this, "Item Saved", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void removedSavedItem() {
+        savedItemReference.child(firebaseUser.getUid()).child(itemKey).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+                    isSaved = false;
+                    Toast.makeText(OtherItemDetailActivity.this, "Item has been unsaved", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(OtherItemDetailActivity.this, "" + task.getException().toString(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
     public void retrieveExtraData() {
@@ -172,7 +284,6 @@ public class OtherItemDetailActivity extends AppCompatActivity implements OnMapR
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        System.out.println(itemKey + "Hello");
         itemReference.child(itemKey).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
