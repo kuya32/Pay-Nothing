@@ -1,14 +1,185 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".fragments.AccountFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="match_parent" >
+
+        <include
+            android:id="@+id/accountToolbar"
+            layout="@layout/main_toolbar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/accountCardView"
+            android:layout_width="0dp"
+            android:layout_height="100dp"
+            android:layout_margin="15dp"
+            android:background="@drawable/item_detail_bottom_border"
+            app:cardBackgroundColor="@color/primaryColor"
+            app:cardCornerRadius="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/accountToolbar">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/accountUserProfileImage"
+                    android:layout_width="100dp"
+                    android:layout_height="0dp"
+                    android:layout_margin="5dp"
+                    android:src="@drawable/profile_image"
+                    app:civ_border_color="@color/secondaryColor"
+                    app:civ_border_width="2dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/accountUserName"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginEnd="15dp"
+                    android:hint="Some Person"
+                    android:textColor="@color/secondaryColor"
+                    android:textColorHint="@color/secondaryColor"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/accountUserProfileImage"
+                    app:layout_constraintTop_toTopOf="@+id/accountUserProfileImage" />
+
+                <TextView
+                    android:id="@+id/accountUserLocation"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginEnd="15dp"
+                    android:hint="Some Location"
+                    android:textColor="@color/secondaryColor"
+                    android:textColorHint="@color/secondaryColor"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="@+id/accountUserProfileImage"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/accountUserProfileImage"
+                    app:layout_constraintTop_toBottomOf="@+id/accountUserName" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.cardview.widget.CardView>
+
+        <TextView
+            android:id="@+id/accountSavedItemsText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="100dp"
+            android:text="Saved Items"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:background="@drawable/item_detail_bottom_border"
+            app:layout_constraintEnd_toEndOf="@+id/accountCardView"
+            app:layout_constraintStart_toStartOf="@+id/accountCardView"
+            app:layout_constraintTop_toBottomOf="@+id/accountCardView" />
+
+        <ImageView
+            android:id="@+id/accountSavedItemsImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_saved"
+            app:layout_constraintBottom_toBottomOf="@+id/accountSavedItemsText"
+            app:layout_constraintEnd_toEndOf="@+id/accountSavedItemsText"
+            app:layout_constraintTop_toTopOf="@+id/accountSavedItemsText" />
+
+        <TextView
+            android:id="@+id/accountSettingsText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:text="Account Settings"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:background="@drawable/item_detail_bottom_border"
+            app:layout_constraintEnd_toEndOf="@+id/accountSavedItemsText"
+            app:layout_constraintStart_toStartOf="@+id/accountSavedItemsText"
+            app:layout_constraintTop_toBottomOf="@+id/accountSavedItemsText" />
+
+        <ImageView
+            android:id="@+id/accountSettingsImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_settings"
+            app:layout_constraintBottom_toBottomOf="@+id/accountSettingsText"
+            app:layout_constraintEnd_toEndOf="@+id/accountSettingsText"
+            app:layout_constraintTop_toTopOf="@+id/accountSettingsText" />
+
+        <TextView
+            android:id="@+id/accountPublicProfileText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:text="Public Profile"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:background="@drawable/item_detail_bottom_border"
+            app:layout_constraintEnd_toEndOf="@+id/accountSettingsText"
+            app:layout_constraintStart_toStartOf="@+id/accountSettingsText"
+            app:layout_constraintTop_toBottomOf="@+id/accountSettingsText" />
+
+        <ImageView
+            android:id="@+id/accountPublicProfileImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_profile"
+            app:layout_constraintBottom_toBottomOf="@+id/accountPublicProfileText"
+            app:layout_constraintEnd_toEndOf="@+id/accountPublicProfileText"
+            app:layout_constraintTop_toTopOf="@+id/accountPublicProfileText" />
+
+        <TextView
+            android:id="@+id/accountHelpText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:text="Help Center"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:background="@drawable/item_detail_bottom_border"
+            app:layout_constraintEnd_toEndOf="@+id/accountPublicProfileText"
+            app:layout_constraintStart_toStartOf="@+id/accountPublicProfileText"
+            app:layout_constraintTop_toBottomOf="@+id/accountPublicProfileText" />
+
+        <ImageView
+            android:id="@+id/accountHelpImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_help"
+            app:layout_constraintBottom_toBottomOf="@+id/accountHelpText"
+            app:layout_constraintEnd_toEndOf="@+id/accountHelpText"
+            app:layout_constraintTop_toTopOf="@+id/accountHelpText" />
+
+        <Button
+            android:id="@+id/accountLogoutButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="45dp"
+            android:backgroundTint="@color/primaryColor"
+            android:text="Logout"
+            android:textColor="@color/secondaryColor"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="@+id/accountHelpText"
+            app:layout_constraintStart_toStartOf="@+id/accountHelpText"
+            app:layout_constraintTop_toBottomOf="@+id/accountHelpText" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>

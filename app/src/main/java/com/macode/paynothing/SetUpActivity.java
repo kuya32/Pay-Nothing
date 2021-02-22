@@ -6,6 +6,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -28,6 +30,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageActivity;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.io.IOException;
@@ -42,8 +45,8 @@ public class SetUpActivity extends AppCompatActivity {
     private static final int REQUEST_CODE = 101;
     private CardView setUpCardView;
     private CircleImageView profileImage;
-    private TextInputLayout usernameInput, firstNameInput, lastNameInput, phoneNumberInput;
-    private String username, firstName, lastName, phoneNumber;
+    private TextInputLayout usernameInput, firstNameInput, lastNameInput, phoneNumberInput, cityAndStateInput;
+    private String username, firstName, lastName, phoneNumber, cityAndState;
     private Button saveButton;
     private Uri uri;
     private FirebaseAuth firebaseAuth;
@@ -68,6 +71,7 @@ public class SetUpActivity extends AppCompatActivity {
         firstNameInput = findViewById(R.id.setUpFirstName);
         lastNameInput = findViewById(R.id.setUpLastName);
         phoneNumberInput = findViewById(R.id.setUpPhoneNumber);
+        cityAndStateInput = findViewById(R.id.setUpLocation);
         saveButton = findViewById(R.id.setUpSaveButton);
         savingDataProgressCardView = findViewById(R.id.savingDataProgressCardView);
 
@@ -82,7 +86,7 @@ public class SetUpActivity extends AppCompatActivity {
                 Intent gallery = new Intent();
                 gallery.setType("image/*");
                 gallery.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(Intent.createChooser(gallery, "Select image"), REQUEST_CODE);
+                startActivityForResult(gallery, REQUEST_CODE);
             }
         });
 
@@ -100,6 +104,7 @@ public class SetUpActivity extends AppCompatActivity {
         firstName = firstNameInput.getEditText().getText().toString();
         lastName = lastNameInput.getEditText().getText().toString();
         phoneNumber = phoneNumberInput.getEditText().getText().toString();
+        cityAndState = cityAndStateInput.getEditText().getText().toString();
         Date date = new Date();
         SimpleDateFormat format = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
         final String stringDate = format.format(date);
@@ -112,6 +117,8 @@ public class SetUpActivity extends AppCompatActivity {
             showError(lastNameInput, "Required field!");
         } else if (phoneNumber.isEmpty() || phoneNumber.length() < 13) {
             showError(phoneNumberInput, "Input should match example!");
+        } else if (cityAndState.isEmpty() || cityAndState.length() < 5) {
+            showError(cityAndStateInput, "Required field!");
         } else if (uri == null) {
             Toast.makeText(this, "Please select an image!", Toast.LENGTH_SHORT).show();
         } else {
@@ -129,6 +136,7 @@ public class SetUpActivity extends AppCompatActivity {
                                 hashMap.put("lastName", lastName);
                                 hashMap.put("phoneNumber", phoneNumber);
                                 hashMap.put("profileImage", uri.toString());
+                                hashMap.put("location", cityAndState);
                                 hashMap.put("status", "Online");
 
                                 databaseReference.child(firebaseUser.getUid()).updateChildren(hashMap).addOnSuccessListener(new OnSuccessListener() {
@@ -161,23 +169,22 @@ public class SetUpActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CODE && resultCode == RESULT_OK && data != null) {
+
+        if (requestCode == REQUEST_CODE && data != null) {
             uri = data.getData();
-            CropImage.activity()
+            CropImage.activity(uri)
                     .setGuidelines(CropImageView.Guidelines.ON)
                     .setAspectRatio(1, 1)
                     .start(this);
         }
 
-        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
-            CropImage.ActivityResult result = CropImage.getActivityResult(data);
-            Uri resultUri = result.getUri();
-            try {
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), resultUri);
-                profileImage.setImageBitmap(bitmap);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        CropImage.ActivityResult result = CropImage.getActivityResult(data);
+        uri = result.getUri();
+        try {
+            Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+            profileImage.setImageBitmap(bitmap);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }
