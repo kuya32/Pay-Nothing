@@ -7,4 +7,204 @@
     android:layout_height="match_parent"
     tools:context=".AccountSettingsActivity">
 
-  </androidx.constraintlayout.widget.ConstraintLayout>
+  <RelativeLayout
+      android:id="@+id/accountSettingsSecondaryRelativeLayout"
+      android:visibility="invisible"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent">
+
+    <FrameLayout
+        android:id="@+id/accountSettingsFragmentContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+  </RelativeLayout>
+
+  <RelativeLayout
+      android:id="@+id/accountSettingsMainRelativeLayout"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+      <include
+          android:id="@+id/accountSettingsToolbar"
+          layout="@layout/main_toolbar"
+          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toTopOf="parent" />
+
+      <TextView
+          android:id="@+id/accountSettingsName"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="75dp"
+          android:layout_marginStart="30dp"
+          android:hint="Name"
+          android:textColor="@color/white"
+          android:textColorHint="@color/white"
+          android:textSize="20sp"
+          android:background="@drawable/item_detail_bottom_border"
+          app:layout_constraintEnd_toStartOf="@+id/accountSettingsEditName"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toBottomOf="@+id/accountSettingsToolbar" />
+
+      <TextView
+          android:id="@+id/accountSettingsEditName"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="75dp"
+          android:layout_marginEnd="30dp"
+          android:text="Edit"
+          android:background="@drawable/item_detail_bottom_border"
+          android:textColor="@color/white"
+          android:textSize="20sp"
+          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintTop_toBottomOf="@+id/accountSettingsToolbar" />
+
+      <TextView
+          android:id="@+id/accountSettingsUsername"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="30dp"
+          android:hint="Username"
+          android:textColor="@color/white"
+          android:textColorHint="@color/white"
+          android:textSize="20sp"
+          android:background="@drawable/item_detail_bottom_border"
+          app:layout_constraintEnd_toEndOf="@+id/accountSettingsName"
+          app:layout_constraintStart_toStartOf="@+id/accountSettingsName"
+          app:layout_constraintTop_toBottomOf="@+id/accountSettingsName" />
+
+      <TextView
+          android:id="@+id/accountSettingsEditUsername"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="30dp"
+          android:text="Edit"
+          android:background="@drawable/item_detail_bottom_border"
+          android:textColor="@color/white"
+          android:textSize="20sp"
+          app:layout_constraintEnd_toEndOf="@+id/accountSettingsEditName"
+          app:layout_constraintStart_toEndOf="@+id/accountSettingsName"
+          app:layout_constraintTop_toBottomOf="@+id/accountSettingsName" />
+
+      <TextView
+          android:id="@+id/accountSettingsEmail"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="30dp"
+          android:hint="Email"
+          android:textColor="@color/white"
+          android:textColorHint="@color/white"
+          android:textSize="20sp"
+          android:background="@drawable/item_detail_bottom_border"
+          app:layout_constraintEnd_toEndOf="@+id/accountSettingsUsername"
+          app:layout_constraintStart_toStartOf="@+id/accountSettingsUsername"
+          app:layout_constraintTop_toBottomOf="@+id/accountSettingsUsername"/>
+
+      <TextView
+          android:id="@+id/accountSettingsEditEmail"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="30dp"
+          android:text="Edit"
+          android:textColor="@color/white"
+          android:textSize="20sp"
+          android:background="@drawable/item_detail_bottom_border"
+          app:layout_constraintEnd_toEndOf="@+id/accountSettingsEditUsername"
+          app:layout_constraintStart_toEndOf="@+id/accountSettingsUsername"
+          app:layout_constraintTop_toBottomOf="@+id/accountSettingsUsername" />
+
+      <TextView
+          android:id="@+id/accountSettingsPassword"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="30dp"
+          android:text="********"
+          android:textColor="@color/red"
+          android:textSize="20sp"
+          android:background="@drawable/item_detail_bottom_border"
+          app:layout_constraintEnd_toEndOf="@+id/accountSettingsEmail"
+          app:layout_constraintStart_toStartOf="@+id/accountSettingsEmail"
+          app:layout_constraintTop_toBottomOf="@+id/accountSettingsEmail"/>
+
+      <TextView
+          android:id="@+id/accountSettingsEditPassword"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="30dp"
+          android:text="Edit"
+          android:textColor="@color/red"
+          android:textSize="20sp"
+          android:background="@drawable/item_detail_bottom_border"
+          app:layout_constraintEnd_toEndOf="@+id/accountSettingsEditEmail"
+          app:layout_constraintStart_toEndOf="@+id/accountSettingsEmail"
+          app:layout_constraintTop_toBottomOf="@+id/accountSettingsEmail" />
+
+      <TextView
+          android:id="@+id/accountSettingsPhoneNumber"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="30dp"
+          android:hint="Phone Number"
+          android:textColor="@color/white"
+          android:textColorHint="@color/white"
+          android:textSize="20sp"
+          android:background="@drawable/item_detail_bottom_border"
+          app:layout_constraintEnd_toEndOf="@+id/accountSettingsPassword"
+          app:layout_constraintStart_toStartOf="@+id/accountSettingsPassword"
+          app:layout_constraintTop_toBottomOf="@+id/accountSettingsPassword"/>
+
+      <TextView
+          android:id="@+id/accountSettingsEditPhoneNumber"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="30dp"
+          android:text="Edit"
+          android:textColor="@color/white"
+          android:textSize="20sp"
+          android:background="@drawable/item_detail_bottom_border"
+          app:layout_constraintEnd_toEndOf="@+id/accountSettingsEditPassword"
+          app:layout_constraintStart_toEndOf="@+id/accountSettingsPassword"
+          app:layout_constraintTop_toBottomOf="@+id/accountSettingsPassword" />
+
+      <TextView
+          android:id="@+id/accountSettingsLocation"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="30dp"
+          android:hint="Location"
+          android:textColor="@color/white"
+          android:textColorHint="@color/white"
+          android:textSize="20sp"
+          android:background="@drawable/item_detail_bottom_border"
+          app:layout_constraintEnd_toEndOf="@+id/accountSettingsPhoneNumber"
+          app:layout_constraintStart_toStartOf="@+id/accountSettingsPhoneNumber"
+          app:layout_constraintTop_toBottomOf="@+id/accountSettingsPhoneNumber"/>
+
+      <TextView
+          android:id="@+id/accountSettingsEditLocation"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="30dp"
+          android:background="@drawable/item_detail_bottom_border"
+          android:text="Edit"
+          android:textColor="@color/white"
+          android:textSize="20sp"
+          app:layout_constraintEnd_toEndOf="@+id/accountSettingsEditPhoneNumber"
+          app:layout_constraintStart_toEndOf="@+id/accountSettingsPhoneNumber"
+          app:layout_constraintTop_toBottomOf="@+id/accountSettingsPhoneNumber" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+  </RelativeLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
