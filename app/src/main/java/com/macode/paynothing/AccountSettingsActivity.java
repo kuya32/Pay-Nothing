@@ -18,7 +18,12 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.macode.paynothing.fragments.accountSettings.EditEmailFragment;
+import com.macode.paynothing.fragments.accountSettings.EditLocationFragment;
 import com.macode.paynothing.fragments.accountSettings.EditNameFragment;
+import com.macode.paynothing.fragments.accountSettings.EditPasswordFragment;
+import com.macode.paynothing.fragments.accountSettings.EditPhoneNumberFragment;
+import com.macode.paynothing.fragments.accountSettings.EditUsernameFragment;
 import com.macode.paynothing.fragments.postItem.PostItemCategoryFragment;
 
 import org.w3c.dom.Text;
@@ -76,35 +81,50 @@ public class AccountSettingsActivity extends AppCompatActivity {
         editUsername.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                main.setVisibility(View.INVISIBLE);
+                secondary.setVisibility(View.VISIBLE);
+                Fragment editUsernameFragment = new EditUsernameFragment();
+                getSupportFragmentManager().beginTransaction().replace(R.id.accountSettingsFragmentContainer, editUsernameFragment).commit();
             }
         });
 
         editEmail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                main.setVisibility(View.INVISIBLE);
+                secondary.setVisibility(View.VISIBLE);
+                Fragment editEmailFragment = new EditEmailFragment();
+                getSupportFragmentManager().beginTransaction().replace(R.id.accountSettingsFragmentContainer, editEmailFragment).commit();
             }
         });
 
         editPassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                main.setVisibility(View.INVISIBLE);
+                secondary.setVisibility(View.VISIBLE);
+                Fragment editPasswordFragment = new EditPasswordFragment();
+                getSupportFragmentManager().beginTransaction().replace(R.id.accountSettingsFragmentContainer, editPasswordFragment).commit();
             }
         });
 
         editPhoneNumber.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                main.setVisibility(View.INVISIBLE);
+                secondary.setVisibility(View.VISIBLE);
+                Fragment editPhoneNumberFragment = new EditPhoneNumberFragment();
+                getSupportFragmentManager().beginTransaction().replace(R.id.accountSettingsFragmentContainer, editPhoneNumberFragment).commit();
             }
         });
 
         editLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                main.setVisibility(View.INVISIBLE);
+                secondary.setVisibility(View.VISIBLE);
+                Fragment editLocationFragment = new EditLocationFragment();
+                getSupportFragmentManager().beginTransaction().replace(R.id.accountSettingsFragmentContainer, editLocationFragment).commit();
             }
         });
     }

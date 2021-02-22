@@ -10,11 +10,6 @@ import android.view.ViewGroup;
 
 import com.macode.paynothing.R;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link EditEmailFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class EditEmailFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
