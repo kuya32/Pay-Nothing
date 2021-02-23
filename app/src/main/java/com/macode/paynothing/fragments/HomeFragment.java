@@ -36,6 +36,7 @@ import com.squareup.picasso.Picasso;
 public class HomeFragment extends Fragment {
 
     private Toolbar toolbar;
+    private String refactoredItemKey;
     private FirebaseAuth firebaseAuth;
     private FirebaseUser firebaseUser;
     private DatabaseReference itemReference;
@@ -108,21 +109,27 @@ public class HomeFragment extends Fragment {
     }
 
     private void loadItems() {
-        Query query = itemReference.orderByChild("postItemDate");
+        Query query = itemReference.orderByChild("dateItemPosted");
         itemsOptions = new FirebaseRecyclerOptions.Builder<Items>().setQuery(query, Items.class).build();
         itemsAdapter = new FirebaseRecyclerAdapter<Items, ItemsViewHolder>(itemsOptions) {
             @Override
             protected void onBindViewHolder(@NonNull ItemsViewHolder holder, int position, @NonNull Items model) {
                 final String itemKey = getRef(position).getKey();
-                Picasso.get().load(model.getImageUrl()).into(holder.itemImageView);
-                holder.itemImageView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(requireActivity(), OtherItemDetailActivity.class);
-                        intent.putExtra("itemKey", itemKey);
-                        startActivity(intent);
-                    }
-                });
+                refactoredItemKey = itemKey.substring(0, itemKey.indexOf(" "));
+                if (!firebaseUser.getUid().equals(refactoredItemKey)) {
+                    Picasso.get().load(model.getImageUrl()).into(holder.itemImageView);
+                    holder.itemImageView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent(requireActivity(), OtherItemDetailActivity.class);
+                            intent.putExtra("itemKey", itemKey);
+                            startActivity(intent);
+                        }
+                    });
+                } else {
+                    holder.itemImageView.setVisibility(View.GONE);
+                }
+
             }
 
             @NonNull

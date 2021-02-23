@@ -218,21 +218,21 @@ public class OtherItemDetailActivity extends AppCompatActivity implements OnMapR
                     itemLocation = snapshot.child("location").getValue().toString();
                     itemCategory = snapshot.child("category").getValue().toString();
                     itemCondition = snapshot.child("condition").getValue().toString();
-//                    itemPickUpOnly = snapshot.child("").getValue().toString();
-//                    itemPickUpOnly = (itemPickUp = true) ? "Pick Up Only" : "Drop Off";
+                    itemPickUpOnly = snapshot.child("pickUpOnly").getValue().toString();
+                    itemPickUpOnly = (itemPickUp = true) ? "Pick Up Only" : "Drop Off";
                     itemBrand = snapshot.child("brand").getValue().toString();
                     itemModel = snapshot.child("model").getValue().toString();
                     itemType = snapshot.child("type").getValue().toString();
                     itemDescription = snapshot.child("description").getValue().toString();
-                    itemLat = snapshot.child("lat").getValue().toString();
-                    itemLong = snapshot.child("long").getValue().toString();
+                    itemLat = snapshot.child("latitude").getValue().toString();
+                    itemLong = snapshot.child("longitude").getValue().toString();
 
                     Picasso.get().load(itemImage).into(itemDetailImage);
                     itemDetailTitle.setText(itemTitle);
                     itemDetailLocation.setText(itemLocation);
                     itemDetailCategory.setText(itemCategory);
                     itemDetailCondition.setText(String.format("Condition: %s", itemCondition));
-//                    itemDetailPickUpOnly.setText(String.format("%s", itemPickUpOnly));
+                    itemDetailPickUpOnly.setText(String.format("%s", itemPickUpOnly));
                     itemDetailBrand.setText(String.format("Brand: %s", itemBrand));
                     itemDetailModel.setText(String.format("Model: %s", itemModel));
                     itemDetailType.setText(String.format("Type: %s", itemType));
@@ -288,8 +288,8 @@ public class OtherItemDetailActivity extends AppCompatActivity implements OnMapR
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
-                    itemLat = snapshot.child("lat").getValue().toString();
-                    itemLong = snapshot.child("long").getValue().toString();
+                    itemLat = snapshot.child("latitude").getValue().toString();
+                    itemLong = snapshot.child("longitude").getValue().toString();
 
                     googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(Double.parseDouble(itemLat), Double.parseDouble(itemLong)), 12));
                     Circle circle = googleMap.addCircle(new CircleOptions()

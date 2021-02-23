@@ -33,7 +33,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.macode.paynothing.activities.OtherItemDetailActivity;
 import com.squareup.picasso.Picasso;
+
+import java.util.HashMap;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -42,12 +45,12 @@ public class ItemDetailActivity extends AppCompatActivity implements OnMapReadyC
     private Toolbar itemDetailToolBar;
     private CircleImageView itemDetailSellerImage;
     private ImageView itemDetailImage;
-    private String itemTitle, itemImage, itemCategory,  itemCondition, itemBrand, itemModel, itemType, itemDescription, itemLocation, itemPickUpOnly, itemLat, itemLong, itemSellerImageUrl, itemSellerUsername, loyaltyString;
+    private String itemKey, itemTitle, itemImage, itemCategory,  itemCondition, itemBrand, itemModel, itemType, itemDescription, itemLocation, itemPickUpOnly, itemLat, itemLong, itemSellerImageUrl, itemSellerUsername, loyaltyString;
     private TextView itemDetailTitle, itemDetailLocation, itemDetailCategory, itemDetailCondition, itemDetailPickUpOnly, itemDetailSellerUsername, itemDetailBrand, itemDetailModel, itemDetailType, itemDetailDescription, loyalty;
     private Boolean itemPickUp;
     private FirebaseAuth firebaseAuth;
     private FirebaseUser firebaseUser;
-    private DatabaseReference userReference;
+    private DatabaseReference userReference, itemReference;
     private Button editItemButton;
 
     @Override
@@ -73,6 +76,7 @@ public class ItemDetailActivity extends AppCompatActivity implements OnMapReadyC
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
         userReference = FirebaseDatabase.getInstance().getReference().child("Users");
+        itemReference = FirebaseDatabase.getInstance().getReference().child("Items");
 
         setSupportActionBar(itemDetailToolBar);
         getSupportActionBar().setTitle("Item Details");
@@ -87,20 +91,6 @@ public class ItemDetailActivity extends AppCompatActivity implements OnMapReadyC
 
         retrieveExtraData();
 
-        itemPickUpOnly = (itemPickUp) ? "Pick Up Only" : "Drop Off";
-
-        itemDetailImage.setImageBitmap(stringToBitMap(itemImage));
-        itemDetailTitle.setText(itemTitle);
-        itemDetailLocation.setText(itemLocation);
-        itemDetailCategory.setText(itemCategory);
-        itemDetailCondition.setText(String.format("Condition: %s", itemCondition));
-        itemDetailPickUpOnly.setText(String.format("%s", itemPickUpOnly));
-        retrieveSellerData();
-        itemDetailBrand.setText(String.format("Brand: %s", itemBrand));
-        itemDetailModel.setText(String.format("Model: %s", itemModel));
-        itemDetailType.setText(String.format("Type: %s", itemType));
-        itemDetailDescription.setText(String.format("More info: %s", itemDescription));
-
         editItemButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -112,18 +102,37 @@ public class ItemDetailActivity extends AppCompatActivity implements OnMapReadyC
 
     public void retrieveExtraData() {
         Intent intent = getIntent();
-        itemTitle = intent.getStringExtra("title");
-        itemImage = intent.getStringExtra("image");
-        itemCategory = intent.getStringExtra("category");
-        itemCondition = intent.getStringExtra("condition");
-        itemBrand = intent.getStringExtra("brand");
-        itemModel = intent.getStringExtra("model");
-        itemType = intent.getStringExtra("type");
-        itemDescription = intent.getStringExtra("description");
-        itemLocation = intent.getStringExtra("location");
-        itemLat = intent.getStringExtra("lat");
-        itemLong = intent.getStringExtra("long");
-        itemPickUp = intent.getBooleanExtra("pickUp", false);
+        if (!intent.getStringExtra("itemKey").equals(null)) {
+            itemKey = intent.getStringExtra("itemKey");
+            retrieveItemDataFromFirebase();
+            retrieveSellerData();
+        } else {
+            itemTitle = intent.getStringExtra("title");
+            itemImage = intent.getStringExtra("image");
+            itemCategory = intent.getStringExtra("category");
+            itemCondition = intent.getStringExtra("condition");
+            itemBrand = intent.getStringExtra("brand");
+            itemModel = intent.getStringExtra("model");
+            itemType = intent.getStringExtra("type");
+            itemDescription = intent.getStringExtra("description");
+            itemLocation = intent.getStringExtra("location");
+            itemLat = intent.getStringExtra("lat");
+            itemLong = intent.getStringExtra("long");
+            itemPickUp = intent.getBooleanExtra("pickUp", false);
+
+            itemDetailImage.setImageBitmap(stringToBitMap(itemImage));
+            itemDetailTitle.setText(itemTitle);
+            itemDetailLocation.setText(itemLocation);
+            itemDetailCategory.setText(itemCategory);
+            itemDetailCondition.setText(String.format("Condition: %s", itemCondition));
+            itemPickUpOnly = (itemPickUp) ? "Pick Up Only" : "Drop Off";
+            itemDetailPickUpOnly.setText(String.format("%s", itemPickUpOnly));
+            retrieveSellerData();
+            itemDetailBrand.setText(String.format("Brand: %s", itemBrand));
+            itemDetailModel.setText(String.format("Model: %s", itemModel));
+            itemDetailType.setText(String.format("Type: %s", itemType));
+            itemDetailDescription.setText(String.format("More info: %s", itemDescription));
+        }
     }
 
     private void retrieveSellerData() {
@@ -134,7 +143,7 @@ public class ItemDetailActivity extends AppCompatActivity implements OnMapReadyC
                     itemSellerImageUrl = snapshot.child("profileImage").getValue().toString();
                     itemSellerUsername = snapshot.child("username").getValue().toString();
                     loyaltyString = snapshot.child("dateUserCreated").getValue().toString();
-                    String subLoyaltyString = loyaltyString.substring((loyaltyString.indexOf("-") + 1), loyaltyString.indexOf(" "));
+                    String subLoyaltyString = changeNumberDateToWordedDate(loyaltyString);
 
                     Picasso.get().load(itemSellerImageUrl).into(itemDetailSellerImage);
                     itemDetailSellerUsername.setText(itemSellerUsername);
@@ -145,6 +154,45 @@ public class ItemDetailActivity extends AppCompatActivity implements OnMapReadyC
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 Toast.makeText(ItemDetailActivity.this, "Sorry, something went wrong!", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void retrieveItemDataFromFirebase() {
+        itemReference.child(itemKey).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    itemTitle = snapshot.child("title").getValue().toString();
+                    itemImage = snapshot.child("imageUrl").getValue().toString();
+                    itemLocation = snapshot.child("location").getValue().toString();
+                    itemCategory = snapshot.child("category").getValue().toString();
+                    itemCondition = snapshot.child("condition").getValue().toString();
+                    itemPickUpOnly = snapshot.child("pickUpOnly").getValue().toString();
+                    itemPickUpOnly = (itemPickUp = true) ? "Pick Up Only" : "Drop Off";
+                    itemBrand = snapshot.child("brand").getValue().toString();
+                    itemModel = snapshot.child("model").getValue().toString();
+                    itemType = snapshot.child("type").getValue().toString();
+                    itemDescription = snapshot.child("description").getValue().toString();
+                    itemLat = snapshot.child("latitude").getValue().toString();
+                    itemLong = snapshot.child("longitude").getValue().toString();
+
+                    Picasso.get().load(itemImage).into(itemDetailImage);
+                    itemDetailTitle.setText(itemTitle);
+                    itemDetailLocation.setText(itemLocation);
+                    itemDetailCategory.setText(itemCategory);
+                    itemDetailCondition.setText(String.format("Condition: %s", itemCondition));
+                    itemDetailPickUpOnly.setText(String.format("%s", itemPickUpOnly));
+                    itemDetailBrand.setText(String.format("Brand: %s", itemBrand));
+                    itemDetailModel.setText(String.format("Model: %s", itemModel));
+                    itemDetailType.setText(String.format("Type: %s", itemType));
+                    itemDetailDescription.setText(String.format("More info: %s", itemDescription));
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(ItemDetailActivity.this, "Sorry, could not retrieve data from firebase!", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -162,12 +210,55 @@ public class ItemDetailActivity extends AppCompatActivity implements OnMapReadyC
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(Double.parseDouble(itemLat), Double.parseDouble(itemLong)), 12));
-        Circle circle = googleMap.addCircle(new CircleOptions()
-                .center(new LatLng(Double.parseDouble(itemLat), Double.parseDouble(itemLong)))
-                .radius(1500)
-                .strokeColor(Color.parseColor("#8097FAFB"))
-                .fillColor(Color.parseColor("#8097FAFB")));
-        circle.setVisible(true);
+        itemReference.child(itemKey).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    itemLat = snapshot.child("latitude").getValue().toString();
+                    itemLong = snapshot.child("longitude").getValue().toString();
+
+                    googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(Double.parseDouble(itemLat), Double.parseDouble(itemLong)), 12));
+                    Circle circle = googleMap.addCircle(new CircleOptions()
+                            .center(new LatLng(Double.parseDouble(itemLat), Double.parseDouble(itemLong)))
+                            .radius(1500)
+                            .strokeColor(Color.parseColor("#8097FAFB"))
+                            .fillColor(Color.parseColor("#8097FAFB")));
+                    circle.setVisible(true);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
+    private String changeNumberDateToWordedDate(String numberedDate) {
+        String refactorNumberedDate;
+        String month = "";
+        String wordedMonth = "";
+        String year = "";
+
+        HashMap<String, String> months = new HashMap<>();
+        months.put("1", "January");
+        months.put("2", "February");
+        months.put("3", "March");
+        months.put("4", "April");
+        months.put("5", "May");
+        months.put("6", "June");
+        months.put("7", "July");
+        months.put("8", "August");
+        months.put("9", "September");
+        months.put("10", "October");
+        months.put("11", "November");
+        months.put("12", "December");
+
+        refactorNumberedDate = numberedDate.substring(numberedDate.indexOf("-") + 1, numberedDate.indexOf(" "));
+        month = refactorNumberedDate.substring(0, refactorNumberedDate.indexOf("-"));
+        wordedMonth = months.get(month);
+        year = refactorNumberedDate.substring(refactorNumberedDate.indexOf("-") + 1);
+
+        return String.format("%s, %s", wordedMonth, year);
+    }
+
 }

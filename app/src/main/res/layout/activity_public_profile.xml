@@ -7,4 +7,122 @@
     android:layout_height="match_parent"
     tools:context=".PublicProfileActivity">
 
-  </androidx.constraintlayout.widget.ConstraintLayout>
+  <include
+      android:id="@+id/publicProfileToolbar"
+      layout="@layout/main_toolbar"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent" />
+
+  <androidx.cardview.widget.CardView
+      android:id="@+id/publicProfileCardView"
+      android:layout_width="0dp"
+      android:layout_height="100dp"
+      android:layout_margin="20dp"
+      app:cardBackgroundColor="@color/primaryColor"
+      app:cardCornerRadius="10dp"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/publicProfileToolbar">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+      <de.hdodenhof.circleimageview.CircleImageView
+          android:id="@+id/publicProfileImage"
+          android:layout_width="100dp"
+          android:layout_height="0dp"
+          android:layout_margin="5dp"
+          android:src="@drawable/profile_image"
+          app:civ_border_color="@color/secondaryColor"
+          app:civ_border_width="2dp"
+          app:layout_constraintBottom_toBottomOf="parent"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toTopOf="parent" />
+
+      <TextView
+          android:id="@+id/publicProfileName"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_marginStart="15dp"
+          android:layout_marginEnd="15dp"
+          android:hint="Some Person"
+          android:textColor="@color/secondaryColor"
+          android:textColorHint="@color/secondaryColor"
+          android:textSize="20sp"
+          android:textStyle="bold"
+          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintStart_toEndOf="@+id/publicProfileImage"
+          app:layout_constraintTop_toTopOf="@+id/publicProfileImage" />
+
+      <TextView
+          android:id="@+id/publicProfileDateJoined"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_marginStart="15dp"
+          android:layout_marginEnd="15dp"
+          android:hint="Some Time"
+          android:textColor="@color/secondaryColor"
+          android:textColorHint="@color/secondaryColor"
+          android:textSize="20sp"
+          android:textStyle="bold"
+          app:layout_constraintBottom_toTopOf="@+id/publicProfileLocation"
+          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintStart_toEndOf="@+id/publicProfileImage"
+          app:layout_constraintTop_toBottomOf="@+id/publicProfileName" />
+
+      <TextView
+          android:id="@+id/publicProfileLocation"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_marginStart="15dp"
+          android:layout_marginEnd="15dp"
+          android:hint="Some Location"
+          android:textColor="@color/secondaryColor"
+          android:textColorHint="@color/secondaryColor"
+          android:textSize="20sp"
+          android:textStyle="bold"
+          app:layout_constraintBottom_toBottomOf="@+id/publicProfileImage"
+          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintStart_toEndOf="@+id/publicProfileImage"
+          app:layout_constraintTop_toBottomOf="@+id/publicProfileDateJoined" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+  </androidx.cardview.widget.CardView>
+
+  <View
+      android:id="@+id/publicProfileDividerView"
+      android:layout_width="0dp"
+      android:layout_height="1dp"
+      android:background="@drawable/item_detail_bottom_border"
+      android:layout_marginTop="20dp"
+      app:layout_constraintEnd_toEndOf="@+id/publicProfileCardView"
+      app:layout_constraintStart_toStartOf="@+id/publicProfileCardView"
+      app:layout_constraintTop_toBottomOf="@+id/publicProfileCardView" />
+
+  <TextView
+      android:id="@+id/publicProfileUsersItems"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="15dp"
+      android:text="Items from this seller"
+      android:textColor="@color/primaryColor"
+      android:textSize="20sp"
+      android:textStyle="bold"
+      app:layout_constraintEnd_toEndOf="@+id/publicProfileDividerView"
+      app:layout_constraintStart_toStartOf="@+id/publicProfileDividerView"
+      app:layout_constraintTop_toBottomOf="@+id/publicProfileDividerView" />
+
+  <androidx.recyclerview.widget.RecyclerView
+      android:id="@+id/publicProfileUsersItemsRecyclerView"
+      android:layout_width="0dp"
+      android:layout_height="0dp"
+      android:layout_marginTop="10dp"
+      android:layout_marginBottom="10dp"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/publicProfileUsersItems" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
