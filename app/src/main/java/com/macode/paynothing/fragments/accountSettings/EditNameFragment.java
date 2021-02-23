@@ -1,5 +1,6 @@
 package com.macode.paynothing.fragments.accountSettings;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -16,6 +17,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -33,7 +36,7 @@ public class EditNameFragment extends Fragment {
     private Toolbar toolbar;
     private TextInputLayout editNameInput;
     private RelativeLayout main, secondary;
-    private String nameString, newNameString;
+    private String nameString, newNameString, newNameLastNameString;
     private Button editNameSaveButton;
     private FirebaseAuth firebaseAuth;
     private FirebaseUser firebaseUser;
@@ -65,7 +68,6 @@ public class EditNameFragment extends Fragment {
 
         ((AppCompatActivity) requireActivity()).setSupportActionBar(toolbar);
         ((AppCompatActivity) requireActivity()).getSupportActionBar().setTitle("Enter Name");
-//        ((AppCompatActivity) requireActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setHasOptionsMenu(true);
 
         loadUserName();
@@ -74,9 +76,6 @@ public class EditNameFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 saveEditedName();
-                main.setVisibility(View.VISIBLE);
-//                requireActivity().finish();
-//                startActivity(requireActivity().getIntent());
             }
         });
 
@@ -85,11 +84,27 @@ public class EditNameFragment extends Fragment {
 
     private void saveEditedName() {
         newNameString = editNameInput.getEditText().getText().toString();
-        userReference.child(firebaseUser.getUid()).child("firstName").setValue(newNameString.substring(0, newNameString.indexOf(" ")));
-        if (newNameString.substring(newNameString.indexOf(" ") + 1).equals("")) {
-            userReference.child(firebaseUser.getUid()).child("lastName").setValue("");
+        newNameLastNameString = newNameString.substring(newNameString.indexOf(" ") + 1);
+
+        if (!newNameString.contains(" ") || newNameString.isEmpty() || newNameString.length() < 3) {
+            showError(editNameInput, "Please provide first and last name!");
         } else {
-            userReference.child(firebaseUser.getUid()).child("lastName").setValue(newNameString.substring(newNameString.indexOf(" ") + 1));
+            userReference.child(firebaseUser.getUid()).child("firstName").setValue(newNameString.substring(0, newNameString.indexOf(" "))).addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    if (task.isSuccessful()) {
+                        userReference.child(firebaseUser.getUid()).child("lastName").setValue(newNameLastNameString).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    requireActivity().finish();
+                                    startActivity(requireActivity().getIntent());
+                                }
+                            }
+                        });
+                    }
+                }
+            });
         }
     }
 
@@ -126,5 +141,8 @@ public class EditNameFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
-
+    private void showError(TextInputLayout input, String string) {
+        input.setError(string);
+        input.requestFocus();
+    }
 }

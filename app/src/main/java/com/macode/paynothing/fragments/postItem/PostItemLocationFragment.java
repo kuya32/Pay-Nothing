@@ -4,6 +4,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
@@ -37,6 +38,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -78,9 +80,9 @@ public class PostItemLocationFragment extends Fragment {
 
     private Toolbar postToolbar;
     private SwitchCompat pickUpOnlySwitch;
-    private Boolean locationDetermined, pickUpOnly;
+    private Boolean locationDetermined, pickUpOnly = false;
     private EditText postItemZipCode;
-    private String itemImageString, itemTitleString, itemCategoryString, itemConditionString, itemBrandString, itemModelString, itemTypeString, itemDescriptionString, itemLocationString, cityName, stateName, latString, longString;
+    private String itemImageString, itemTitleString, itemCategoryString, itemConditionString, itemBrandString, itemModelString, itemTypeString, itemDescriptionString, itemLocationString, cityName, stateName, pickUpOnlyString, latString, longString;
     private Button postItemGetLocationButton, postItemSubmitButton, postItemLocationApplyCityAndStateButton;
     private FusedLocationProviderClient client;
     private RelativeLayout mainLocationRelativeLayout, getLocationRelativeLayout;
@@ -101,7 +103,6 @@ public class PostItemLocationFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
     @Override
@@ -135,6 +136,8 @@ public class PostItemLocationFragment extends Fragment {
         setHasOptionsMenu(true);
 
         locationFragmentRetriever();
+
+        checkSwitchPosition();
 
         postItemGetLocationButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -315,8 +318,8 @@ public class PostItemLocationFragment extends Fragment {
                             hashMap.put("description", itemDescriptionString);
                             hashMap.put("location", itemLocationString);
                             hashMap.put("pickUpOnly", pickUpOnly);
-                            hashMap.put("lat", latString);
-                            hashMap.put("long", longString);
+                            hashMap.put("latitude", latString);
+                            hashMap.put("longitude", longString);
                             itemReference.child(firebaseUser.getUid() + " " + stringDate).updateChildren(hashMap).addOnCompleteListener(new OnCompleteListener() {
                                 @Override
                                 public void onComplete(@NonNull Task task) {
@@ -330,6 +333,23 @@ public class PostItemLocationFragment extends Fragment {
                             });
                         }
                     });
+                }
+            }
+        });
+    }
+
+    private void checkSwitchPosition() {
+        SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("project", Context.MODE_PRIVATE);
+        final SharedPreferences.Editor editor = sharedPreferences.edit();
+        pickUpOnlySwitch.setChecked(sharedPreferences.getBoolean("switch", false));
+
+        pickUpOnlySwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                     pickUpOnly = true;
+                } else {
+                    pickUpOnly = false;
                 }
             }
         });
@@ -380,7 +400,7 @@ public class PostItemLocationFragment extends Fragment {
     public Uri getImageUri(Context inContext, Bitmap inImage) {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
+        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Pic", null);
         return Uri.parse(path);
     }
 

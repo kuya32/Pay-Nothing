@@ -87,7 +87,7 @@ public class ItemDetailActivity extends AppCompatActivity implements OnMapReadyC
 
         retrieveExtraData();
 
-        itemPickUpOnly = (itemPickUp = true) ? "Pick Up Only" : "Drop Off";
+        itemPickUpOnly = (itemPickUp) ? "Pick Up Only" : "Drop Off";
 
         itemDetailImage.setImageBitmap(stringToBitMap(itemImage));
         itemDetailTitle.setText(itemTitle);
