@@ -82,15 +82,20 @@ public class EditUsernameFragment extends Fragment {
 
     private void saveEditedUsername() {
         newUsernameString = editUsernameInput.getEditText().getText().toString();
-        userReference.child(firebaseUser.getUid()).child("username").setValue(newUsernameString).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful()) {
-                    requireActivity().finish();
-                    startActivity(requireActivity().getIntent());
+
+        if (newUsernameString.isEmpty() || newUsernameString.length() < 2) {
+            showError(editUsernameInput, "Username must be greater than 1 characters!");
+        } else {
+            userReference.child(firebaseUser.getUid()).child("username").setValue(newUsernameString).addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    if (task.isSuccessful()) {
+                        requireActivity().finish();
+                        startActivity(requireActivity().getIntent());
+                    }
                 }
-            }
-        });
+            });
+        }
     }
 
     private void loadUserUsername() {
@@ -124,5 +129,10 @@ public class EditUsernameFragment extends Fragment {
             secondary.setVisibility(View.GONE);
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void showError(TextInputLayout input, String string) {
+        input.setError(string);
+        input.requestFocus();
     }
 }

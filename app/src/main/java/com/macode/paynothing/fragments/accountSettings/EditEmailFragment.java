@@ -79,23 +79,28 @@ public class EditEmailFragment extends Fragment {
 
     private void saveEditedUsername() {
         newEmailString = editEmailInput.getEditText().getText().toString();
-        firebaseUser.updateEmail(newEmailString).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful()) {
-                    firebaseUser.sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            if (task.isSuccessful()) {
-                                Toast.makeText(requireActivity(), "Verification email sent", Toast.LENGTH_SHORT).show();
-                                requireActivity().finish();
-                                startActivity(requireActivity().getIntent());
+
+        if (newEmailString.isEmpty() || !newEmailString.contains("@")) {
+            showError(editEmailInput, "Please provide a valid email!");
+        } else {
+            firebaseUser.updateEmail(newEmailString).addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    if (task.isSuccessful()) {
+                        firebaseUser.sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    Toast.makeText(requireActivity(), "Verification email sent", Toast.LENGTH_SHORT).show();
+                                    requireActivity().finish();
+                                    startActivity(requireActivity().getIntent());
+                                }
                             }
-                        }
-                    });
+                        });
+                    }
                 }
-            }
-        });
+            });
+        }
     }
 
     private void loadUserEmail() {
@@ -116,5 +121,10 @@ public class EditEmailFragment extends Fragment {
             secondary.setVisibility(View.GONE);
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void showError(TextInputLayout input, String string) {
+        input.setError(string);
+        input.requestFocus();
     }
 }

@@ -68,8 +68,6 @@ public class EditPasswordFragment extends Fragment {
         ((AppCompatActivity) requireActivity()).getSupportActionBar().setTitle("Change Password");
         setHasOptionsMenu(true);
 
-        saveEditedPassword();
-
         editPasswordSaveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

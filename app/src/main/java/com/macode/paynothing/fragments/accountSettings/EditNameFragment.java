@@ -36,7 +36,7 @@ public class EditNameFragment extends Fragment {
     private Toolbar toolbar;
     private TextInputLayout editNameInput;
     private RelativeLayout main, secondary;
-    private String nameString, newNameString;
+    private String nameString, newNameString, newNameLastNameString;
     private Button editNameSaveButton;
     private FirebaseAuth firebaseAuth;
     private FirebaseUser firebaseUser;
@@ -84,30 +84,24 @@ public class EditNameFragment extends Fragment {
 
     private void saveEditedName() {
         newNameString = editNameInput.getEditText().getText().toString();
-        userReference.child(firebaseUser.getUid()).child("firstName").setValue(newNameString.substring(0, newNameString.indexOf(" "))).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
+        newNameLastNameString = newNameString.substring(newNameString.indexOf(" ") + 1);
 
-            }
-        });
-
-        if (newNameString.substring(newNameString.indexOf(" ") + 1).equals("")) {
-            userReference.child(firebaseUser.getUid()).child("lastName").setValue("").addOnCompleteListener(new OnCompleteListener<Void>() {
-                @Override
-                public void onComplete(@NonNull Task<Void> task) {
-                    if (task.isSuccessful()) {
-                        requireActivity().finish();
-                        startActivity(requireActivity().getIntent());
-                    }
-                }
-            });
+        if (!newNameString.contains(" ") || newNameString.isEmpty() || newNameString.length() < 3) {
+            showError(editNameInput, "Please provide first and last name!");
         } else {
-            userReference.child(firebaseUser.getUid()).child("lastName").setValue(newNameString.substring(newNameString.indexOf(" ") + 1)).addOnCompleteListener(new OnCompleteListener<Void>() {
+            userReference.child(firebaseUser.getUid()).child("firstName").setValue(newNameString.substring(0, newNameString.indexOf(" "))).addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
                     if (task.isSuccessful()) {
-                        requireActivity().finish();
-                        startActivity(requireActivity().getIntent());
+                        userReference.child(firebaseUser.getUid()).child("lastName").setValue(newNameLastNameString).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    requireActivity().finish();
+                                    startActivity(requireActivity().getIntent());
+                                }
+                            }
+                        });
                     }
                 }
             });
@@ -145,5 +139,10 @@ public class EditNameFragment extends Fragment {
             secondary.setVisibility(View.GONE);
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void showError(TextInputLayout input, String string) {
+        input.setError(string);
+        input.requestFocus();
     }
 }
