@@ -96,9 +96,8 @@ public class EditNameFragment extends Fragment {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
                     if (task.isSuccessful()) {
-                        Intent intent = new Intent(requireContext(), AccountSettingsActivity.class);
-                        startActivity(intent);
                         requireActivity().finish();
+                        startActivity(requireActivity().getIntent());
                     }
                 }
             });
@@ -107,9 +106,8 @@ public class EditNameFragment extends Fragment {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
                     if (task.isSuccessful()) {
-                        Intent intent = new Intent(requireContext(), AccountSettingsActivity.class);
-                        startActivity(intent);
                         requireActivity().finish();
+                        startActivity(requireActivity().getIntent());
                     }
                 }
             });

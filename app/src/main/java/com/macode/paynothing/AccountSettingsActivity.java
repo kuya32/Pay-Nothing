@@ -11,6 +11,10 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -18,6 +22,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.macode.paynothing.fragments.accountSettings.AuthenticateUserFragment;
 import com.macode.paynothing.fragments.accountSettings.EditEmailFragment;
 import com.macode.paynothing.fragments.accountSettings.EditLocationFragment;
 import com.macode.paynothing.fragments.accountSettings.EditNameFragment;
@@ -25,6 +30,7 @@ import com.macode.paynothing.fragments.accountSettings.EditPasswordFragment;
 import com.macode.paynothing.fragments.accountSettings.EditPhoneNumberFragment;
 import com.macode.paynothing.fragments.accountSettings.EditUsernameFragment;
 import com.macode.paynothing.fragments.postItem.PostItemCategoryFragment;
+import com.macode.paynothing.fragments.postItem.PostItemLocationFragment;
 
 import org.w3c.dom.Text;
 
@@ -32,7 +38,7 @@ public class AccountSettingsActivity extends AppCompatActivity {
 
     private Toolbar toolbar;
     private TextView name, editName, username, editUsername, email, editEmail, password, editPassword, phoneNumber, editPhoneNumber, location, editLocation;
-    private String nameString, usernameString, emailString, passwordString, phoneNumberString, locationString;
+    private String nameString, usernameString, emailString, passwordString, phoneNumberString, locationString, providedUserPassword, fragmentId;
     public RelativeLayout main, secondary;
     private FirebaseAuth firebaseAuth;
     private FirebaseUser firebaseUser;
@@ -93,8 +99,13 @@ public class AccountSettingsActivity extends AppCompatActivity {
             public void onClick(View v) {
                 main.setVisibility(View.INVISIBLE);
                 secondary.setVisibility(View.VISIBLE);
-                Fragment editEmailFragment = new EditEmailFragment();
-                getSupportFragmentManager().beginTransaction().replace(R.id.accountSettingsFragmentContainer, editEmailFragment).commit();
+
+                Bundle detailBundle = new Bundle();
+                Fragment authenticateUserFragment = new AuthenticateUserFragment();
+                fragmentId = "email";
+                detailBundle.putString("fragmentId", fragmentId);
+                authenticateUserFragment.setArguments(detailBundle);
+                getSupportFragmentManager().beginTransaction().replace(R.id.accountSettingsFragmentContainer, authenticateUserFragment).commit();
             }
         });
 
@@ -103,8 +114,13 @@ public class AccountSettingsActivity extends AppCompatActivity {
             public void onClick(View v) {
                 main.setVisibility(View.INVISIBLE);
                 secondary.setVisibility(View.VISIBLE);
-                Fragment editPasswordFragment = new EditPasswordFragment();
-                getSupportFragmentManager().beginTransaction().replace(R.id.accountSettingsFragmentContainer, editPasswordFragment).commit();
+
+                Bundle detailBundle = new Bundle();
+                Fragment authenticateUserFragment = new AuthenticateUserFragment();
+                fragmentId = "password";
+                detailBundle.putString("fragmentId", fragmentId);
+                authenticateUserFragment.setArguments(detailBundle);
+                getSupportFragmentManager().beginTransaction().replace(R.id.accountSettingsFragmentContainer, authenticateUserFragment).commit();
             }
         });
 

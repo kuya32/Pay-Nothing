@@ -4,32 +4,68 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.accountSettings.EditPasswordFragment">
+    tools:context=".fragments.accountSettings.AuthenticateUserFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
 
         <include
-            android:id="@+id/editPasswordToolbar"
+            android:id="@+id/authenticationToolbar"
             layout="@layout/main_toolbar"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <TextView
+            android:id="@+id/authenticationMessage"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Sensitive User Information: Please provide account authorization credentials"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:gravity="center"
+            android:layout_margin="20dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/authenticationToolbar" />
+
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/editCurrentPasswordInput"
+            android:id="@+id/authenticationEmailInput"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="30dp"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="50dp"
             android:layout_marginEnd="30dp"
             android:textColorHint="@color/white"
             app:hintTextColor="@color/white"
             app:boxStrokeColor="@color/primaryColor"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editPasswordToolbar"
+            app:layout_constraintTop_toBottomOf="@+id/authenticationMessage"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textEmailAddress"
+                android:hint="Email"
+                android:textColor="@color/white" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/authenticationPasswordInput"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginEnd="30dp"
+            android:textColorHint="@color/white"
+            app:hintTextColor="@color/white"
+            app:boxStrokeColor="@color/primaryColor"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/authenticationEmailInput"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -40,82 +76,12 @@
                 android:textColor="@color/white" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <TextView
-            android:id="@+id/editPasswordMessage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:text="Enter the password you use when you login with email."
-            android:textColor="@color/white"
-            android:textSize="12sp"
-            android:textStyle="italic"
-            app:layout_constraintStart_toStartOf="@+id/editCurrentPasswordInput"
-            app:layout_constraintTop_toBottomOf="@+id/editCurrentPasswordInput" />
-
-        <TextView
-            android:id="@+id/editPasswordForgotPassword"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Forgot Password?"
-            android:textColor="@color/primaryColor"
-            android:textSize="16sp"
-            app:layout_constraintStart_toStartOf="@+id/editPasswordMessage"
-            app:layout_constraintTop_toBottomOf="@+id/editPasswordMessage" />
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/editNewPasswordInput"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="30dp"
-            android:layout_marginTop="40dp"
-            android:layout_marginEnd="30dp"
-            android:textColorHint="@color/white"
-            app:hintTextColor="@color/white"
-            app:boxStrokeColor="@color/primaryColor"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editPasswordForgotPassword"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textPassword"
-                android:hint="New Password"
-                android:textColor="@color/white" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/confirmEditNewPasswordInput"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="30dp"
-            android:layout_marginTop="40dp"
-            android:layout_marginEnd="30dp"
-            android:textColorHint="@color/white"
-            app:hintTextColor="@color/white"
-            app:boxStrokeColor="@color/primaryColor"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editNewPasswordInput"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textPassword"
-                android:hint="Confirm Password"
-                android:textColor="@color/white" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-
-
         <Button
-            android:id="@+id/editPasswordSaveButton"
+            android:id="@+id/authorizeButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/primaryColor"
-            android:text="Save"
+            android:text="Re-Authorize"
             android:textColor="@color/secondaryColor"
             android:textSize="16sp"
             android:textStyle="bold"

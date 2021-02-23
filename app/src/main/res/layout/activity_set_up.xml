@@ -148,7 +148,7 @@
                         android:id="@+id/phoneNumberExample"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Ex: (XXX)XXX-XXXX"
+                        android:text="Ex: (###)###-####"
                         android:textSize="12sp"
                         android:textStyle="italic"
                         app:layout_constraintStart_toStartOf="@+id/setUpPhoneNumber"
