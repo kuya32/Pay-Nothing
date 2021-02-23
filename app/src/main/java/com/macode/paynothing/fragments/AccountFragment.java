@@ -22,6 +22,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.macode.paynothing.AccountSettingsActivity;
+import com.macode.paynothing.HelpCenterActivity;
 import com.macode.paynothing.LoginActivity;
 import com.macode.paynothing.PublicProfileActivity;
 import com.macode.paynothing.R;
@@ -34,7 +35,7 @@ public class AccountFragment extends Fragment {
 
     private Toolbar accountToolbar;
     private CircleImageView profileImage;
-    private TextView accountUserName, accountUserLocation, accountSavedItems, accountSettings, accountPublicProfile;
+    private TextView accountUserName, accountUserLocation, accountSavedItems, accountSettings, accountPublicProfile, accountHelpCenter;
     private String profileImageUrl, firstName, lastName, location;
     private Button logoutButton;
     private FirebaseAuth firebaseAuth;
@@ -63,6 +64,7 @@ public class AccountFragment extends Fragment {
         accountSavedItems = view.findViewById(R.id.accountSavedItemsText);
         accountSettings = view.findViewById(R.id.accountSettingsText);
         accountPublicProfile = view.findViewById(R.id.accountPublicProfileText);
+        accountHelpCenter = view.findViewById(R.id.accountHelpText);
         logoutButton = view.findViewById(R.id.accountLogoutButton);
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
@@ -94,6 +96,14 @@ public class AccountFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(requireActivity(), PublicProfileActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        accountHelpCenter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(requireActivity(), HelpCenterActivity.class);
                 startActivity(intent);
             }
         });
