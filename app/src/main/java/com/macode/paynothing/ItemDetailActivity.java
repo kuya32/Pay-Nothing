@@ -94,45 +94,22 @@ public class ItemDetailActivity extends AppCompatActivity implements OnMapReadyC
         editItemButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ItemDetailActivity.this, EditItemActivity.class);
-                startActivity(intent);
+                sendItemInfoToEdit();
             }
         });
     }
 
+    private void sendItemInfoToEdit() {
+        Intent intent = new Intent(ItemDetailActivity.this, EditItemActivity.class);
+        intent.putExtra("itemKey", itemKey);
+        startActivity(intent);
+    }
+
     public void retrieveExtraData() {
         Intent intent = getIntent();
-        if (!intent.getStringExtra("itemKey").equals(null)) {
-            itemKey = intent.getStringExtra("itemKey");
-            retrieveItemDataFromFirebase();
-            retrieveSellerData();
-        } else {
-            itemTitle = intent.getStringExtra("title");
-            itemImage = intent.getStringExtra("image");
-            itemCategory = intent.getStringExtra("category");
-            itemCondition = intent.getStringExtra("condition");
-            itemBrand = intent.getStringExtra("brand");
-            itemModel = intent.getStringExtra("model");
-            itemType = intent.getStringExtra("type");
-            itemDescription = intent.getStringExtra("description");
-            itemLocation = intent.getStringExtra("location");
-            itemLat = intent.getStringExtra("lat");
-            itemLong = intent.getStringExtra("long");
-            itemPickUp = intent.getBooleanExtra("pickUp", false);
-
-            itemDetailImage.setImageBitmap(stringToBitMap(itemImage));
-            itemDetailTitle.setText(itemTitle);
-            itemDetailLocation.setText(itemLocation);
-            itemDetailCategory.setText(itemCategory);
-            itemDetailCondition.setText(String.format("Condition: %s", itemCondition));
-            itemPickUpOnly = (itemPickUp) ? "Pick Up Only" : "Drop Off";
-            itemDetailPickUpOnly.setText(String.format("%s", itemPickUpOnly));
-            retrieveSellerData();
-            itemDetailBrand.setText(String.format("Brand: %s", itemBrand));
-            itemDetailModel.setText(String.format("Model: %s", itemModel));
-            itemDetailType.setText(String.format("Type: %s", itemType));
-            itemDetailDescription.setText(String.format("More info: %s", itemDescription));
-        }
+        itemKey = intent.getStringExtra("itemKey");
+        retrieveItemDataFromFirebase();
+        retrieveSellerData();
     }
 
     private void retrieveSellerData() {
@@ -197,17 +174,6 @@ public class ItemDetailActivity extends AppCompatActivity implements OnMapReadyC
         });
     }
 
-    public Bitmap stringToBitMap(String encodedString) {
-        try {
-            byte[] encodeByte = Base64.decode(encodedString, Base64.DEFAULT);
-            Bitmap bitmap = BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
-            return bitmap;
-        } catch (Exception e) {
-            e.getMessage();
-            return null;
-        }
-    }
-
     @Override
     public void onMapReady(GoogleMap googleMap) {
         itemReference.child(itemKey).addValueEventListener(new ValueEventListener() {
@@ -233,6 +199,7 @@ public class ItemDetailActivity extends AppCompatActivity implements OnMapReadyC
             }
         });
     }
+
     private String changeNumberDateToWordedDate(String numberedDate) {
         String refactorNumberedDate;
         String month = "";

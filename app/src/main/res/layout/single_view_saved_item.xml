@@ -60,19 +60,18 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/savedItemTitle"
                 app:layout_constraintStart_toEndOf="@+id/savedItemImageView"
-                app:layout_constraintBottom_toTopOf="@+id/savedItemDelete" />
+                app:layout_constraintBottom_toTopOf="@+id/deleteSavedItem" />
 
             <TextView
-                android:id="@+id/savedItemDelete"
-                android:layout_width="0dp"
+                android:id="@+id/deleteSavedItem"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="15dp"
                 android:layout_marginEnd="15dp"
                 android:text="Delete"
-                android:textColor="@color/secondaryColor"
+                android:textColor="@color/red"
                 android:textSize="20sp"
                 app:layout_constraintBottom_toBottomOf="@+id/savedItemImageView"
-                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/savedItemImageView" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
