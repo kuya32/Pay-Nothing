@@ -3,36 +3,46 @@ package com.macode.paynothing;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Base64;
+import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.macode.paynothing.fragments.EditMultipleItemPropertiesFragment;
+import com.macode.paynothing.fragments.accountSettings.AuthenticateUserFragment;
 import com.macode.paynothing.fragments.postItem.PostItemCategoryFragment;
 import com.squareup.picasso.Picasso;
 
 public class EditItemActivity extends AppCompatActivity {
 
     private Toolbar toolbar;
-    private String itemKey, itemImage, itemTitle, itemCategory, itemCondition, itemBrand, itemModel, itemType, itemDescription, itemLocation, itemPickUpOnly;
+    private String itemKey, itemImage, itemTitle, itemCategory, itemCondition, itemBrand, itemModel, itemType, itemDescription, itemLocation, itemPickUpOnly, newUpdatedTitle, newUpdatedBrand, newUpdatedModel, newUpdatedType, itemPropertyKey;
     private Boolean itemPickUp;
-    private TextView category, condition, location, pickUpOnly, updateTitle, editCategory, editCondition, updateBrand, updateModel, updateType, updateDescription, editLocation, editPickUpOnly;
+    private TextView category, condition, description, location, pickUpOnly, updateTitle, editCategory, editCondition, updateBrand, updateModel, updateType, editDescription, editLocation, editPickUpOnly;
     private ImageView image;
-    private EditText title, brand, model, type, description;
+    private EditText title, brand, model, type;
+    public RelativeLayout main, secondary;
     private FirebaseAuth firebaseAuth;
     private FirebaseUser firebaseUser;
     private DatabaseReference itemReference;
@@ -57,11 +67,13 @@ public class EditItemActivity extends AppCompatActivity {
         type = findViewById(R.id.editItemType);
         updateType = findViewById(R.id.editItemTypeButton);
         description = findViewById(R.id.editItemDescription);
-        updateDescription = findViewById(R.id.editItemDescriptionButton);
+        editDescription = findViewById(R.id.editItemDescriptionButton);
         location = findViewById(R.id.editItemLocation);
         editLocation = findViewById(R.id.editItemLocationButton);
         pickUpOnly = findViewById(R.id.editItemPickUpOnly);
         editPickUpOnly = findViewById(R.id.editItemPickUpOnlyButton);
+        main = findViewById(R.id.editItemMainRelativeLayout);
+        secondary = findViewById(R.id.editItemSecondaryRelativeLayout);
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
         itemReference = FirebaseDatabase.getInstance().getReference().child("Items");
@@ -70,49 +82,168 @@ public class EditItemActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         loadItem();
+
+        updateTitle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                newUpdatedTitle = title.getText().toString();
+                itemReference.child(itemKey).child("title").setValue(newUpdatedTitle).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            finish();
+                            startActivity(getIntent());
+                        } else {
+                            Toast.makeText(EditItemActivity.this, "Sorry, could not updated item's title", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+            }
+        });
+
+        editCategory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                main.setVisibility(View.INVISIBLE);
+                secondary.setVisibility(View.VISIBLE);
+                Bundle categoryBundle = new Bundle();
+                Fragment itemPropertyFragment = new EditMultipleItemPropertiesFragment();
+                itemPropertyKey = "category";
+                categoryBundle.putString("itemPropertyKey", itemPropertyKey);
+                categoryBundle.putString("itemKey", itemKey);
+                itemPropertyFragment.setArguments(categoryBundle);
+                getSupportFragmentManager().beginTransaction().replace(R.id.editItemFragmentContainer, itemPropertyFragment).commit();
+            }
+        });
+
+        editCondition.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                main.setVisibility(View.INVISIBLE);
+                secondary.setVisibility(View.VISIBLE);
+                Bundle conditionBundle = new Bundle();
+                Fragment itemPropertyFragment = new EditMultipleItemPropertiesFragment();
+                itemPropertyKey = "condition";
+                conditionBundle.putString("itemPropertyKey", itemPropertyKey);
+                conditionBundle.putString("itemKey", itemKey);
+                itemPropertyFragment.setArguments(conditionBundle);
+                getSupportFragmentManager().beginTransaction().replace(R.id.editItemFragmentContainer, itemPropertyFragment).commit();
+            }
+        });
+
+        updateBrand.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                newUpdatedBrand = brand.getText().toString();
+                itemReference.child(itemKey).child("brand").setValue(newUpdatedBrand).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            finish();
+                            startActivity(getIntent());
+                        } else {
+                            Toast.makeText(EditItemActivity.this, "Sorry, could not updated item's title", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+            }
+        });
+
+        updateModel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                newUpdatedModel = model.getText().toString();
+                itemReference.child(itemKey).child("model").setValue(newUpdatedModel).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            finish();
+                            startActivity(getIntent());
+                        } else {
+                            Toast.makeText(EditItemActivity.this, "Sorry, could not updated item's title", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+            }
+        });
+
+        updateType.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                newUpdatedType = type.getText().toString();
+                itemReference.child(itemKey).child("type").setValue(newUpdatedType).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            finish();
+                            startActivity(getIntent());
+                        } else {
+                            Toast.makeText(EditItemActivity.this, "Sorry, could not updated item's title", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+            }
+        });
+
+        editDescription.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                main.setVisibility(View.INVISIBLE);
+                secondary.setVisibility(View.VISIBLE);
+                Bundle descriptionBundle = new Bundle();
+                Fragment itemPropertyFragment = new EditMultipleItemPropertiesFragment();
+                itemPropertyKey = "description";
+                descriptionBundle.putString("itemPropertyKey", itemPropertyKey);
+                descriptionBundle.putString("itemKey", itemKey);
+                itemPropertyFragment.setArguments(descriptionBundle);
+                getSupportFragmentManager().beginTransaction().replace(R.id.editItemFragmentContainer, itemPropertyFragment).commit();
+            }
+        });
+
+        editLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                main.setVisibility(View.INVISIBLE);
+                secondary.setVisibility(View.VISIBLE);
+                Bundle locationBundle = new Bundle();
+                Fragment itemPropertyFragment = new EditMultipleItemPropertiesFragment();
+                itemPropertyKey = "location";
+                locationBundle.putString("itemPropertyKey", itemPropertyKey);
+                locationBundle.putString("itemKey", itemKey);
+                itemPropertyFragment.setArguments(locationBundle);
+                getSupportFragmentManager().beginTransaction().replace(R.id.editItemFragmentContainer, itemPropertyFragment).commit();
+            }
+        });
+
+        editPickUpOnly.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                main.setVisibility(View.INVISIBLE);
+                secondary.setVisibility(View.VISIBLE);
+                Bundle pickUpOnlyBundle = new Bundle();
+                Fragment itemPropertyFragment = new EditMultipleItemPropertiesFragment();
+                itemPropertyKey = "pickUpOnly";
+                pickUpOnlyBundle.putString("itemPropertyKey", itemPropertyKey);
+                pickUpOnlyBundle.putString("itemKey", itemKey);
+                itemPropertyFragment.setArguments(pickUpOnlyBundle);
+                getSupportFragmentManager().beginTransaction().replace(R.id.editItemFragmentContainer, itemPropertyFragment).commit();
+            }
+        });
     }
 
     public void loadItem() {
         Intent intent = getIntent();
         itemKey = intent.getStringExtra("itemKey");
-        if (itemKey != null) {
-            retrieveItemDataFromFirebase();
-        } else {
-            itemTitle = intent.getStringExtra("title");
-            itemImage = intent.getStringExtra("image");
-            System.out.println(itemImage + " Hello");
-            itemCategory = intent.getStringExtra("category");
-            itemCondition = intent.getStringExtra("condition");
-            itemBrand = intent.getStringExtra("brand");
-            itemModel = intent.getStringExtra("model");
-            itemType = intent.getStringExtra("type");
-            itemDescription = intent.getStringExtra("description");
-            itemLocation = intent.getStringExtra("location");
-            itemPickUp = intent.getBooleanExtra("pickUpOnly", false);
-
-            if (itemImage.contains("firebasestorage")) {
-                Picasso.get().load(itemImage).into(image);
-            } else {
-                image.setImageBitmap(stringToBitMap(itemImage));
-            }
-            title.setText(itemTitle);
-            location.setText(itemLocation);
-            category.setText(itemCategory);
-            condition.setText(itemCondition);
-            itemPickUpOnly = (itemPickUp = true) ? "Pick Up Only" : "Drop Off";
-            pickUpOnly.setText(itemPickUpOnly);
-            brand.setText(itemBrand);
-            model.setText(itemModel);
-            type.setText(itemType);
-            description.setText(itemDescription);
-        }
+        retrieveItemDataFromFirebase();
     }
+
     private void retrieveItemDataFromFirebase() {
         itemReference.child(itemKey).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
                     itemTitle = snapshot.child("title").getValue().toString();
+                    getSupportActionBar().setTitle(String.format("Editing \"%s\" Item", itemTitle));
                     itemImage = snapshot.child("imageUrl").getValue().toString();
                     itemLocation = snapshot.child("location").getValue().toString();
                     itemCategory = snapshot.child("category").getValue().toString();
@@ -123,6 +254,9 @@ public class EditItemActivity extends AppCompatActivity {
                     itemModel = snapshot.child("model").getValue().toString();
                     itemType = snapshot.child("type").getValue().toString();
                     itemDescription = snapshot.child("description").getValue().toString();
+                    if (itemDescription.length() > 30) {
+                        itemDescription = itemDescription.substring(0, 30) + "...";
+                    }
 
 
                     Picasso.get().load(itemImage).into(image);
@@ -145,17 +279,6 @@ public class EditItemActivity extends AppCompatActivity {
                 Toast.makeText(EditItemActivity.this, "Sorry, could not retrieve data from firebase!", Toast.LENGTH_SHORT).show();
             }
         });
-    }
-
-    public Bitmap stringToBitMap(String encodedString) {
-        try {
-            byte[] encodeByte = Base64.decode(encodedString, Base64.DEFAULT);
-            Bitmap bitmap = BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
-            return bitmap;
-        } catch (Exception e) {
-            e.getMessage();
-            return null;
-        }
     }
 
     @Override

@@ -82,7 +82,7 @@ public class PostItemLocationFragment extends Fragment {
     private SwitchCompat pickUpOnlySwitch;
     private Boolean locationDetermined, pickUpOnly = false, sold = false;
     private EditText postItemZipCode;
-    private String itemImageString, itemTitleString, itemCategoryString, itemConditionString, itemBrandString, itemModelString, itemTypeString, itemDescriptionString, itemLocationString, cityName, stateName, pickUpOnlyString, latString, longString;
+    private String itemImageString, itemKeyString, itemTitleString, itemCategoryString, itemConditionString, itemBrandString, itemModelString, itemTypeString, itemDescriptionString, itemLocationString, cityName, stateName, pickUpOnlyString, latString, longString, stringDate;
     private Button postItemGetLocationButton, postItemSubmitButton, postItemLocationApplyCityAndStateButton;
     private FusedLocationProviderClient client;
     private RelativeLayout mainLocationRelativeLayout, getLocationRelativeLayout;
@@ -294,7 +294,7 @@ public class PostItemLocationFragment extends Fragment {
         postingItemProgressBar.setVisibility(View.VISIBLE);
         Date date = new Date();
         SimpleDateFormat format = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
-        final String stringDate = format.format(date);
+        stringDate = format.format(date);
 
         itemImageBitmap = stringToBitMap(itemImageString);
         itemImageUri = getImageUri(requireActivity(), itemImageBitmap);
@@ -358,19 +358,9 @@ public class PostItemLocationFragment extends Fragment {
 
     private void locationFragmentPasser() {
         itemLocationString = postItemLocationText.getText().toString();
+        itemKeyString = firebaseUser.getUid() + " " + stringDate;
         Intent intent = new Intent(requireActivity(), ItemDetailActivity.class);
-        intent.putExtra("title", itemTitleString);
-        intent.putExtra("image", itemImageString);
-        intent.putExtra("category", itemCategoryString);
-        intent.putExtra("condition", itemConditionString);
-        intent.putExtra("brand", itemBrandString);
-        intent.putExtra("model", itemModelString);
-        intent.putExtra("type", itemTypeString);
-        intent.putExtra("description", itemDescriptionString);
-        intent.putExtra("location", itemLocationString);
-        intent.putExtra("pickUp", pickUpOnly);
-        intent.putExtra("lat", latString);
-        intent.putExtra("long", longString);
+        intent.putExtra("itemKey", itemKeyString);
         startActivity(intent);
     }
 

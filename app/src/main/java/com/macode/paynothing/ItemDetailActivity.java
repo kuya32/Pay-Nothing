@@ -101,53 +101,15 @@ public class ItemDetailActivity extends AppCompatActivity implements OnMapReadyC
 
     private void sendItemInfoToEdit() {
         Intent intent = new Intent(ItemDetailActivity.this, EditItemActivity.class);
-        intent.putExtra("image", itemImage);
-        intent.putExtra("title", itemTitle);
-        intent.putExtra("image", itemImage);
-        intent.putExtra("category", itemCategory);
-        intent.putExtra("condition", itemCondition);
-        intent.putExtra("brand", itemBrand);
-        intent.putExtra("model", itemModel);
-        intent.putExtra("type", itemType);
-        intent.putExtra("description", itemDescription);
-        intent.putExtra("location", itemLocation);
-        intent.putExtra("pickUpOnly", itemPickUp);
+        intent.putExtra("itemKey", itemKey);
         startActivity(intent);
     }
 
     public void retrieveExtraData() {
         Intent intent = getIntent();
         itemKey = intent.getStringExtra("itemKey");
-        if (itemKey != null) {
-            retrieveItemDataFromFirebase();
-            retrieveSellerData();
-        } else {
-            itemTitle = intent.getStringExtra("title");
-            itemImage = intent.getStringExtra("image");
-            itemCategory = intent.getStringExtra("category");
-            itemCondition = intent.getStringExtra("condition");
-            itemBrand = intent.getStringExtra("brand");
-            itemModel = intent.getStringExtra("model");
-            itemType = intent.getStringExtra("type");
-            itemDescription = intent.getStringExtra("description");
-            itemLocation = intent.getStringExtra("location");
-            itemLat = intent.getStringExtra("lat");
-            itemLong = intent.getStringExtra("long");
-            itemPickUp = intent.getBooleanExtra("pickUp", false);
-
-            itemDetailImage.setImageBitmap(stringToBitMap(itemImage));
-            itemDetailTitle.setText(itemTitle);
-            itemDetailLocation.setText(itemLocation);
-            itemDetailCategory.setText(itemCategory);
-            itemDetailCondition.setText(String.format("Condition: %s", itemCondition));
-            itemPickUpOnly = (itemPickUp) ? "Pick Up Only" : "Drop Off";
-            itemDetailPickUpOnly.setText(String.format("%s", itemPickUpOnly));
-            retrieveSellerData();
-            itemDetailBrand.setText(String.format("Brand: %s", itemBrand));
-            itemDetailModel.setText(String.format("Model: %s", itemModel));
-            itemDetailType.setText(String.format("Type: %s", itemType));
-            itemDetailDescription.setText(String.format("More info: %s", itemDescription));
-        }
+        retrieveItemDataFromFirebase();
+        retrieveSellerData();
     }
 
     private void retrieveSellerData() {
@@ -212,55 +174,32 @@ public class ItemDetailActivity extends AppCompatActivity implements OnMapReadyC
         });
     }
 
-    public Bitmap stringToBitMap(String encodedString) {
-        try {
-            byte[] encodeByte = Base64.decode(encodedString, Base64.DEFAULT);
-            Bitmap bitmap = BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
-            return bitmap;
-        } catch (Exception e) {
-            e.getMessage();
-            return null;
-        }
-    }
-
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        itemReference.child(itemKey).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    itemLat = snapshot.child("latitude").getValue().toString();
+                    itemLong = snapshot.child("longitude").getValue().toString();
 
-        if (itemKey != null) {
-            itemReference.child(itemKey).addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    if (snapshot.exists()) {
-                        itemLat = snapshot.child("latitude").getValue().toString();
-                        itemLong = snapshot.child("longitude").getValue().toString();
-
-                        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(Double.parseDouble(itemLat), Double.parseDouble(itemLong)), 12));
-                        Circle circle = googleMap.addCircle(new CircleOptions()
-                                .center(new LatLng(Double.parseDouble(itemLat), Double.parseDouble(itemLong)))
-                                .radius(1500)
-                                .strokeColor(Color.parseColor("#8097FAFB"))
-                                .fillColor(Color.parseColor("#8097FAFB")));
-                        circle.setVisible(true);
-                    }
+                    googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(Double.parseDouble(itemLat), Double.parseDouble(itemLong)), 12));
+                    Circle circle = googleMap.addCircle(new CircleOptions()
+                            .center(new LatLng(Double.parseDouble(itemLat), Double.parseDouble(itemLong)))
+                            .radius(1500)
+                            .strokeColor(Color.parseColor("#8097FAFB"))
+                            .fillColor(Color.parseColor("#8097FAFB")));
+                    circle.setVisible(true);
                 }
+            }
 
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
 
-                }
-            });
-        } else {
-            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(Double.parseDouble(itemLat), Double.parseDouble(itemLong)), 12));
-            Circle circle = googleMap.addCircle(new CircleOptions()
-                    .center(new LatLng(Double.parseDouble(itemLat), Double.parseDouble(itemLong)))
-                    .radius(1500)
-                    .strokeColor(Color.parseColor("#8097FAFB"))
-                    .fillColor(Color.parseColor("#8097FAFB")));
-            circle.setVisible(true);
-        }
-
-
+            }
+        });
     }
+
     private String changeNumberDateToWordedDate(String numberedDate) {
         String refactorNumberedDate;
         String month = "";

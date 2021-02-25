@@ -11,6 +11,7 @@
         android:visibility="invisible"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/transparentDark"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -23,6 +24,7 @@
     </RelativeLayout>
 
     <RelativeLayout
+        android:id="@+id/editItemMainRelativeLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -294,7 +296,7 @@
                     app:layout_constraintBottom_toTopOf="@+id/editItemDescription"
                     app:layout_constraintStart_toStartOf="@+id/editItemDescription" />
 
-                <EditText
+                <TextView
                     android:id="@+id/editItemDescription"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -302,9 +304,6 @@
                     android:layout_marginStart="30dp"
                     android:background="@drawable/item_detail_bottom_border"
                     android:hint="Description"
-                    android:paddingEnd="10dp"
-                    android:paddingStart="0dp"
-                    android:inputType="textMultiLine"
                     android:textColor="@color/primaryColor"
                     android:textColorHint="@color/primaryColor"
                     android:textSize="20sp"
@@ -319,7 +318,7 @@
                     android:layout_marginTop="30dp"
                     android:layout_marginEnd="30dp"
                     android:background="@drawable/item_detail_bottom_border"
-                    android:text="Update"
+                    android:text="Edit"
                     android:textColor="@color/white"
                     android:textSize="20sp"
                     app:layout_constraintEnd_toEndOf="parent"
