@@ -13,7 +13,7 @@ import com.macode.paynothing.R;
 public class SavedItemsViewHolder extends RecyclerView.ViewHolder{
 
     public ImageView savedItemImageView;
-    public TextView savedItemTitle, dateSavedItem;
+    public TextView savedItemTitle, dateSavedItem, deleteSavedItem;
     public CardView savedItemCardView;
 
     public SavedItemsViewHolder(@NonNull View itemView) {
@@ -22,6 +22,7 @@ public class SavedItemsViewHolder extends RecyclerView.ViewHolder{
         savedItemImageView = itemView.findViewById(R.id.savedItemImageView);
         savedItemTitle = itemView.findViewById(R.id.savedItemTitle);
         dateSavedItem = itemView.findViewById(R.id.dateSavedItem);
+        deleteSavedItem = itemView.findViewById(R.id.deleteSavedItem);
         savedItemCardView = itemView.findViewById(R.id.savedItemCardView);
     }
 }

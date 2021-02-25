@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/sellingItemCardView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        app:cardBackgroundColor="@color/primaryColor"
+        app:cardCornerRadius="15dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/sellingItemImageView"
+                android:layout_width="100dp"
+                android:layout_height="110dp"
+                android:layout_margin="10dp"
+                android:src="@drawable/ic_thing"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/sellingItemTitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp"
+                android:hint="Some saved item"
+                android:textColor="@color/secondaryColor"
+                android:textColorHint="@color/secondaryColor"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/sellingItemImageView"
+                app:layout_constraintTop_toTopOf="@+id/sellingItemImageView" />
+
+            <Button
+                android:id="@+id/markedAsSold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:backgroundTint="@color/secondaryColor"
+                android:text="Mark as Sold"
+                android:textColor="@color/primaryColor"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@+id/sellingShareItem"
+                app:layout_constraintStart_toEndOf="@+id/sellingItemImageView"
+                app:layout_constraintTop_toBottomOf="@+id/sellingItemTitle" />
+
+            <Button
+                android:id="@+id/sold"
+                android:visibility="invisible"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:backgroundTint="@color/transparentDark"
+                android:text="Sold"
+                android:textColor="@color/primaryColor"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@+id/sellingShareItem"
+                app:layout_constraintStart_toEndOf="@+id/sellingItemImageView"
+                app:layout_constraintTop_toBottomOf="@+id/sellingItemTitle" />
+
+            <TextView
+                android:id="@+id/sellingEditItem"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:background="@drawable/selling_right_border"
+                android:text="Edit"
+                android:textColor="@color/secondaryColor"
+                android:textSize="20sp"
+                app:layout_constraintEnd_toStartOf="@+id/sellingShareItem"
+                app:layout_constraintBottom_toBottomOf="@+id/sellingItemImageView"
+                app:layout_constraintStart_toEndOf="@+id/sellingItemImageView" />
+
+            <TextView
+                android:id="@+id/sellingShareItem"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:text="Share"
+                android:background="@drawable/selling_right_border"
+                android:textColor="@color/secondaryColor"
+                android:textSize="20sp"
+                app:layout_constraintEnd_toStartOf="@+id/sellingDeleteItem"
+                app:layout_constraintBottom_toBottomOf="@+id/sellingEditItem"
+                app:layout_constraintStart_toEndOf="@+id/sellingEditItem" />
+
+            <TextView
+                android:id="@+id/sellingDeleteItem"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:text="Delete"
+                android:textColor="@color/red"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toBottomOf="@+id/sellingShareItem"
+                app:layout_constraintStart_toEndOf="@+id/sellingShareItem" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

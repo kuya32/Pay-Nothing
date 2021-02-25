@@ -94,16 +94,31 @@ public class ItemDetailActivity extends AppCompatActivity implements OnMapReadyC
         editItemButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ItemDetailActivity.this, EditItemActivity.class);
-                startActivity(intent);
+                sendItemInfoToEdit();
             }
         });
     }
 
+    private void sendItemInfoToEdit() {
+        Intent intent = new Intent(ItemDetailActivity.this, EditItemActivity.class);
+        intent.putExtra("image", itemImage);
+        intent.putExtra("title", itemTitle);
+        intent.putExtra("image", itemImage);
+        intent.putExtra("category", itemCategory);
+        intent.putExtra("condition", itemCondition);
+        intent.putExtra("brand", itemBrand);
+        intent.putExtra("model", itemModel);
+        intent.putExtra("type", itemType);
+        intent.putExtra("description", itemDescription);
+        intent.putExtra("location", itemLocation);
+        intent.putExtra("pickUpOnly", itemPickUp);
+        startActivity(intent);
+    }
+
     public void retrieveExtraData() {
         Intent intent = getIntent();
-        if (!intent.getStringExtra("itemKey").equals(null)) {
-            itemKey = intent.getStringExtra("itemKey");
+        itemKey = intent.getStringExtra("itemKey");
+        if (itemKey != null) {
             retrieveItemDataFromFirebase();
             retrieveSellerData();
         } else {
@@ -210,28 +225,41 @@ public class ItemDetailActivity extends AppCompatActivity implements OnMapReadyC
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        itemReference.child(itemKey).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists()) {
-                    itemLat = snapshot.child("latitude").getValue().toString();
-                    itemLong = snapshot.child("longitude").getValue().toString();
 
-                    googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(Double.parseDouble(itemLat), Double.parseDouble(itemLong)), 12));
-                    Circle circle = googleMap.addCircle(new CircleOptions()
-                            .center(new LatLng(Double.parseDouble(itemLat), Double.parseDouble(itemLong)))
-                            .radius(1500)
-                            .strokeColor(Color.parseColor("#8097FAFB"))
-                            .fillColor(Color.parseColor("#8097FAFB")));
-                    circle.setVisible(true);
+        if (itemKey != null) {
+            itemReference.child(itemKey).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if (snapshot.exists()) {
+                        itemLat = snapshot.child("latitude").getValue().toString();
+                        itemLong = snapshot.child("longitude").getValue().toString();
+
+                        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(Double.parseDouble(itemLat), Double.parseDouble(itemLong)), 12));
+                        Circle circle = googleMap.addCircle(new CircleOptions()
+                                .center(new LatLng(Double.parseDouble(itemLat), Double.parseDouble(itemLong)))
+                                .radius(1500)
+                                .strokeColor(Color.parseColor("#8097FAFB"))
+                                .fillColor(Color.parseColor("#8097FAFB")));
+                        circle.setVisible(true);
+                    }
                 }
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
 
-            }
-        });
+                }
+            });
+        } else {
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(Double.parseDouble(itemLat), Double.parseDouble(itemLong)), 12));
+            Circle circle = googleMap.addCircle(new CircleOptions()
+                    .center(new LatLng(Double.parseDouble(itemLat), Double.parseDouble(itemLong)))
+                    .radius(1500)
+                    .strokeColor(Color.parseColor("#8097FAFB"))
+                    .fillColor(Color.parseColor("#8097FAFB")));
+            circle.setVisible(true);
+        }
+
+
     }
     private String changeNumberDateToWordedDate(String numberedDate) {
         String refactorNumberedDate;

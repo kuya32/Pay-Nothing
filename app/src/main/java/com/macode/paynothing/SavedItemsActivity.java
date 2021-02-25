@@ -13,9 +13,12 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -77,6 +80,22 @@ public class SavedItemsActivity extends AppCompatActivity {
                         Intent intent = new Intent(SavedItemsActivity.this, OtherItemDetailActivity.class);
                         intent.putExtra("itemKey", itemKey);
                         startActivity(intent);
+                    }
+                });
+
+                holder.deleteSavedItem.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        savedItemReference.child(firebaseUser.getUid()).child(itemKey).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    Toast.makeText(SavedItemsActivity.this, "Item has been unsaved", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(SavedItemsActivity.this, "" + task.getException().toString(), Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
                     }
                 });
             }

@@ -80,7 +80,7 @@ public class PostItemLocationFragment extends Fragment {
 
     private Toolbar postToolbar;
     private SwitchCompat pickUpOnlySwitch;
-    private Boolean locationDetermined, pickUpOnly = false;
+    private Boolean locationDetermined, pickUpOnly = false, sold = false;
     private EditText postItemZipCode;
     private String itemImageString, itemTitleString, itemCategoryString, itemConditionString, itemBrandString, itemModelString, itemTypeString, itemDescriptionString, itemLocationString, cityName, stateName, pickUpOnlyString, latString, longString;
     private Button postItemGetLocationButton, postItemSubmitButton, postItemLocationApplyCityAndStateButton;
@@ -320,6 +320,7 @@ public class PostItemLocationFragment extends Fragment {
                             hashMap.put("pickUpOnly", pickUpOnly);
                             hashMap.put("latitude", latString);
                             hashMap.put("longitude", longString);
+                            hashMap.put("sold", sold);
                             itemReference.child(firebaseUser.getUid() + " " + stringDate).updateChildren(hashMap).addOnCompleteListener(new OnCompleteListener() {
                                 @Override
                                 public void onComplete(@NonNull Task task) {
