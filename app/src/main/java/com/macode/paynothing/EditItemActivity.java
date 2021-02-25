@@ -91,8 +91,7 @@ public class EditItemActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
-                            finish();
-                            startActivity(getIntent());
+                            Toast.makeText(EditItemActivity.this, "Item title updated!", Toast.LENGTH_SHORT).show();
                         } else {
                             Toast.makeText(EditItemActivity.this, "Sorry, could not updated item's title", Toast.LENGTH_SHORT).show();
                         }
@@ -111,6 +110,7 @@ public class EditItemActivity extends AppCompatActivity {
                 itemPropertyKey = "category";
                 categoryBundle.putString("itemPropertyKey", itemPropertyKey);
                 categoryBundle.putString("itemKey", itemKey);
+                categoryBundle.putString("itemTitle", itemTitle);
                 itemPropertyFragment.setArguments(categoryBundle);
                 getSupportFragmentManager().beginTransaction().replace(R.id.editItemFragmentContainer, itemPropertyFragment).commit();
             }
@@ -126,6 +126,7 @@ public class EditItemActivity extends AppCompatActivity {
                 itemPropertyKey = "condition";
                 conditionBundle.putString("itemPropertyKey", itemPropertyKey);
                 conditionBundle.putString("itemKey", itemKey);
+                conditionBundle.putString("itemTitle", itemTitle);
                 itemPropertyFragment.setArguments(conditionBundle);
                 getSupportFragmentManager().beginTransaction().replace(R.id.editItemFragmentContainer, itemPropertyFragment).commit();
             }
@@ -139,8 +140,7 @@ public class EditItemActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
-                            finish();
-                            startActivity(getIntent());
+                            Toast.makeText(EditItemActivity.this, "Item brand updated!", Toast.LENGTH_SHORT).show();
                         } else {
                             Toast.makeText(EditItemActivity.this, "Sorry, could not updated item's title", Toast.LENGTH_SHORT).show();
                         }
@@ -157,8 +157,7 @@ public class EditItemActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
-                            finish();
-                            startActivity(getIntent());
+                            Toast.makeText(EditItemActivity.this, "Item model updated!", Toast.LENGTH_SHORT).show();
                         } else {
                             Toast.makeText(EditItemActivity.this, "Sorry, could not updated item's title", Toast.LENGTH_SHORT).show();
                         }
@@ -175,8 +174,7 @@ public class EditItemActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
-                            finish();
-                            startActivity(getIntent());
+                            Toast.makeText(EditItemActivity.this, "Item type updated!", Toast.LENGTH_SHORT).show();
                         } else {
                             Toast.makeText(EditItemActivity.this, "Sorry, could not updated item's title", Toast.LENGTH_SHORT).show();
                         }
@@ -195,6 +193,7 @@ public class EditItemActivity extends AppCompatActivity {
                 itemPropertyKey = "description";
                 descriptionBundle.putString("itemPropertyKey", itemPropertyKey);
                 descriptionBundle.putString("itemKey", itemKey);
+                descriptionBundle.putString("itemTitle", itemTitle);
                 itemPropertyFragment.setArguments(descriptionBundle);
                 getSupportFragmentManager().beginTransaction().replace(R.id.editItemFragmentContainer, itemPropertyFragment).commit();
             }
@@ -210,6 +209,7 @@ public class EditItemActivity extends AppCompatActivity {
                 itemPropertyKey = "location";
                 locationBundle.putString("itemPropertyKey", itemPropertyKey);
                 locationBundle.putString("itemKey", itemKey);
+                locationBundle.putString("itemTitle", itemTitle);
                 itemPropertyFragment.setArguments(locationBundle);
                 getSupportFragmentManager().beginTransaction().replace(R.id.editItemFragmentContainer, itemPropertyFragment).commit();
             }
@@ -225,6 +225,7 @@ public class EditItemActivity extends AppCompatActivity {
                 itemPropertyKey = "pickUpOnly";
                 pickUpOnlyBundle.putString("itemPropertyKey", itemPropertyKey);
                 pickUpOnlyBundle.putString("itemKey", itemKey);
+                pickUpOnlyBundle.putString("itemTitle", itemTitle);
                 itemPropertyFragment.setArguments(pickUpOnlyBundle);
                 getSupportFragmentManager().beginTransaction().replace(R.id.editItemFragmentContainer, itemPropertyFragment).commit();
             }
@@ -249,7 +250,7 @@ public class EditItemActivity extends AppCompatActivity {
                     itemCategory = snapshot.child("category").getValue().toString();
                     itemCondition = snapshot.child("condition").getValue().toString();
                     itemPickUp = (Boolean) snapshot.child("pickUpOnly").getValue();
-                    itemPickUpOnly = (itemPickUp = true) ? "Pick Up Only" : "Drop Off";
+                    itemPickUpOnly = (itemPickUp) ? "Pick Up Only" : "Drop Off";
                     itemBrand = snapshot.child("brand").getValue().toString();
                     itemModel = snapshot.child("model").getValue().toString();
                     itemType = snapshot.child("type").getValue().toString();
@@ -257,7 +258,6 @@ public class EditItemActivity extends AppCompatActivity {
                     if (itemDescription.length() > 30) {
                         itemDescription = itemDescription.substring(0, 30) + "...";
                     }
-
 
                     Picasso.get().load(itemImage).into(image);
                     title.setText(itemTitle);
