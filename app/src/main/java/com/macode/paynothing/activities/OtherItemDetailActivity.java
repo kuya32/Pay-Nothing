@@ -55,6 +55,7 @@ import com.squareup.picasso.Picasso;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -63,12 +64,12 @@ public class OtherItemDetailActivity extends AppCompatActivity implements OnMapR
     private Toolbar itemDetailToolBar;
     private CircleImageView itemDetailSellerImage;
     private ImageView itemDetailImage;
-    private String itemKey, otherUserId, itemTitle, itemImage, itemCategory,  itemCondition, itemBrand, itemModel, itemType, itemDescription, itemLocation, itemPickUpOnly, itemLat, itemLong, itemSellerImageUrl, itemSellerUsername, loyaltyString;
+    private String itemKey, otherUserId, itemTitle, itemImage, itemCategory,  itemCondition, itemBrand, itemModel, itemType, itemDescription, itemLocation, itemPickUpOnly, itemLat, itemLong, itemSellerImageUrl, itemSellerUsername, loyaltyString, stringDate;
     private TextView itemDetailTitle, itemDetailLocation, itemDetailCategory, itemDetailCondition, itemDetailPickUpOnly, itemDetailSellerUsername, itemDetailBrand, itemDetailModel, itemDetailType, itemDetailDescription, loyalty;
     private Boolean itemPickUp, isSaved = false;
     private FirebaseAuth firebaseAuth;
     private FirebaseUser firebaseUser;
-    private DatabaseReference userReference, itemReference, savedItemReference;
+    private DatabaseReference userReference, itemReference, savedItemReference, inboxChatReference;
     private MenuItem savedItem;
     private Menu otherItemDetailTopMenu;
     private Button messageSellerButton;
@@ -98,6 +99,7 @@ public class OtherItemDetailActivity extends AppCompatActivity implements OnMapR
         userReference = FirebaseDatabase.getInstance().getReference().child("Users");
         itemReference = FirebaseDatabase.getInstance().getReference().child("Items");
         savedItemReference = FirebaseDatabase.getInstance().getReference().child("SavedItems");
+        inboxChatReference = FirebaseDatabase.getInstance().getReference().child("InboxChats");
 
         retrieveExtraData();
         otherUserId = itemKey.substring(0, itemKey.indexOf(" "));
@@ -118,10 +120,37 @@ public class OtherItemDetailActivity extends AppCompatActivity implements OnMapR
         messageSellerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(OtherItemDetailActivity.this, ChatActivity.class);
-                intent.putExtra("sellersId", otherUserId);
-                intent.putExtra("itemKey", itemKey);
-                startActivity(intent);
+                Date date = new Date();
+                SimpleDateFormat format = new SimpleDateFormat("dd-M-yyyy hh:mm:ss", Locale.getDefault());
+                stringDate = format.format(date);
+                HashMap hashMap = new HashMap();
+                hashMap.put("sellerId", otherUserId);
+                hashMap.put("itemKey", itemKey);
+                hashMap.put("buyerId", firebaseUser.getUid());
+                hashMap.put("mostRecentMessage", "No recent messages");
+                hashMap.put("dateOfMostRecentMessage", stringDate);
+                inboxChatReference.child(firebaseUser.getUid()).updateChildren(hashMap).addOnCompleteListener(new OnCompleteListener() {
+                    @Override
+                    public void onComplete(@NonNull Task task) {
+                        if (task.isSuccessful()) {
+                            inboxChatReference.child(otherUserId).updateChildren(hashMap).addOnCompleteListener(new OnCompleteListener() {
+                                @Override
+                                public void onComplete(@NonNull Task task) {
+                                    if (task.isSuccessful()) {
+                                        Intent intent = new Intent(OtherItemDetailActivity.this, ChatActivity.class);
+                                        intent.putExtra("sellersId", otherUserId);
+                                        intent.putExtra("itemKey", itemKey);
+                                        startActivity(intent);
+                                    } else {
+                                        Toast.makeText(OtherItemDetailActivity.this, "Chat could not be created!", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
+                        } else {
+                            Toast.makeText(OtherItemDetailActivity.this, "Chat could not be created!", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
             }
         });
 
@@ -187,7 +216,7 @@ public class OtherItemDetailActivity extends AppCompatActivity implements OnMapR
 
     private void saveItem(String itemKey) {
         Date date = new Date();
-        SimpleDateFormat format = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
+        SimpleDateFormat format = new SimpleDateFormat("dd-M-yyyy hh:mm:ss", Locale.getDefault());
         final String stringDate = format.format(date);
         HashMap hashMap = new HashMap();
         hashMap.put("title", itemTitle);

@@ -56,8 +56,8 @@ public class ChatActivity extends AppCompatActivity {
     private EditText messageInput;
     private ImageView itemImage, addImageButton, sendMessageButton, sellersStatusImage;
     private RecyclerView chatRecyclerView;
-    private String sellersId, itemKey, itemTitle, sellersUsernameString, sellersProfileImageString, sellersLocationString, sellersStatusString, chatMessageString, userProfileImageString, usernameString, stringDate;
-    private DatabaseReference userReference, itemReference, messageReference;
+    private String sellersId, itemKey, itemTitle, sellersUsernameString, sellersProfileImageString, sellersLocationString, sellersStatusString, chatMessageString, userProfileImageString, usernameString, stringDate, timeAgo, itemImageString, senderUsername;
+    private DatabaseReference userReference, itemReference, messageReference, inboxChatReference;
     private FirebaseAuth firebaseAuth;
     private FirebaseUser firebaseUser;
     private FirebaseRecyclerOptions<Chats> chatOptions;
@@ -83,6 +83,7 @@ public class ChatActivity extends AppCompatActivity {
         userReference = FirebaseDatabase.getInstance().getReference().child("Users");
         itemReference = FirebaseDatabase.getInstance().getReference().child("Items");
         messageReference = FirebaseDatabase.getInstance().getReference().child("Messages");
+        inboxChatReference = FirebaseDatabase.getInstance().getReference().child("InboxChats");
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
 
@@ -93,6 +94,7 @@ public class ChatActivity extends AppCompatActivity {
 
         loadUserData();
         loadSellerData();
+        loadItemData();
         loadMessages();
 
         addImageButton.setOnClickListener(new View.OnClickListener() {
@@ -159,6 +161,26 @@ public class ChatActivity extends AppCompatActivity {
         });
     }
 
+    private void loadItemData() {
+        itemReference.child(itemKey).child("imageUrl").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    itemImageString = snapshot.getValue().toString();
+
+                    Picasso.get().load(itemImageString).into(itemImage);
+                } else {
+                    Toast.makeText(ChatActivity.this, "Could not load item image from firebase!", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(ChatActivity.this, "" + error.getMessage().toString(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
     private void loadMessages() {
         chatOptions = new FirebaseRecyclerOptions.Builder<Chats>().setQuery(messageReference.child(firebaseUser.getUid()).child(sellersId).child(itemKey), Chats.class).build();
         chatAdapter = new FirebaseRecyclerAdapter<Chats, ChatsViewHolder>(chatOptions) {
@@ -174,7 +196,11 @@ public class ChatActivity extends AppCompatActivity {
 
                     Picasso.get().load(userProfileImageString).into(holder.usersProfileImage);
                     holder.usersMessage.setText(model.getMessage());
-                    holder.usersMessageTimeAgo.setText(calculateTimeAgo(model.getDateMessageSent()));
+                    timeAgo = calculateTimeAgo(model.getDateMessageSent());
+                    if (timeAgo.equals("0 minutes ago")) {
+                        timeAgo = "seconds ago";
+                    }
+                    holder.usersMessageTimeAgo.setText(timeAgo);
                 } else {
                     holder.sellersMessage.setVisibility(View.VISIBLE);
                     holder.sellersProfileImage.setVisibility(View.VISIBLE);
@@ -185,7 +211,12 @@ public class ChatActivity extends AppCompatActivity {
 
                     Picasso.get().load(sellersProfileImageString).into(holder.sellersProfileImage);
                     holder.sellersMessage.setText(model.getMessage());
-                    holder.sellersMessageTimeAgo.setText(calculateTimeAgo(model.getDateMessageSent()));
+                    timeAgo = calculateTimeAgo(model.getDateMessageSent());
+                    if (timeAgo.equals("0 minutes ago")) {
+                        timeAgo = "seconds ago";
+                    }
+                    holder.sellersMessageTimeAgo.setText(timeAgo);
+
                 }
             }
 
@@ -222,8 +253,20 @@ public class ChatActivity extends AppCompatActivity {
                             @Override
                             public void onComplete(@NonNull Task task) {
                                 if (task.isSuccessful()) {
-                                    messageInput.setText(null);
-                                    Toast.makeText(ChatActivity.this, "Message sent", Toast.LENGTH_SHORT).show();
+                                    HashMap inboxChatHashMap = new HashMap();
+                                    inboxChatHashMap.put("dateOfMostRecentMessage", stringDate);
+                                    inboxChatHashMap.put("mostRecentMessage", String.format("%s: %s", usernameString, chatMessageString));
+                                    inboxChatReference.child(firebaseUser.getUid()).updateChildren(inboxChatHashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            if (task.isSuccessful()) {
+                                                messageInput.setText(null);
+                                                Toast.makeText(ChatActivity.this, "Message sent", Toast.LENGTH_SHORT).show();
+                                            } else {
+                                                Toast.makeText(ChatActivity.this, "Date of most recent message could not be updated!", Toast.LENGTH_SHORT).show();
+                                            }
+                                        }
+                                    });
                                 } else {
                                     Toast.makeText(ChatActivity.this, "Message could not be sent!", Toast.LENGTH_SHORT).show();
                                 }
