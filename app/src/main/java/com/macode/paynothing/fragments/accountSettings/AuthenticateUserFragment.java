@@ -56,7 +56,7 @@ public class AuthenticateUserFragment extends Fragment {
         toolbar = view.findViewById(R.id.authenticationToolbar);
         emailInput = view.findViewById(R.id.authenticationEmailInput);
         passwordInput = view.findViewById(R.id.authenticationPasswordInput);
-        main = requireActivity().findViewById(R.id.mainLocationRelativeLayout);
+        main = requireActivity().findViewById(R.id.accountSettingsMainRelativeLayout);
         secondary = requireActivity().findViewById(R.id.accountSettingsSecondaryRelativeLayout);
         authorizeButton = view.findViewById(R.id.authorizeButton);
         firebaseAuth = FirebaseAuth.getInstance();

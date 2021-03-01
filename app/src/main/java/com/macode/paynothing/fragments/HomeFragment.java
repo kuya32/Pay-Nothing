@@ -70,7 +70,7 @@ public class HomeFragment extends Fragment {
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(requireActivity(), 3);
         itemFeedRecyclerView.setLayoutManager(layoutManager);
 
-        loadItems();
+        loadItems("");
 
         return view;
     }
@@ -103,13 +103,14 @@ public class HomeFragment extends Fragment {
 
             @Override
             public boolean onQueryTextChange(String newText) {
+                loadItems(newText);
                 return false;
             }
         });
     }
 
-    private void loadItems() {
-        Query query = itemReference.orderByChild("dateItemPosted");
+    private void loadItems(String string) {
+        Query query = itemReference.orderByChild("title").startAt(string).endAt(string + "\uf8ff");
         itemsOptions = new FirebaseRecyclerOptions.Builder<Items>().setQuery(query, Items.class).build();
         itemsAdapter = new FirebaseRecyclerAdapter<Items, ItemsViewHolder>(itemsOptions) {
             @Override
@@ -143,4 +144,6 @@ public class HomeFragment extends Fragment {
         itemFeedRecyclerView.setAdapter(itemsAdapter);
         itemFeedRecyclerView.setHasFixedSize(true);
     }
+
+
 }

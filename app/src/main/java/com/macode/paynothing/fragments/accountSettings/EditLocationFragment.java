@@ -166,7 +166,8 @@ public class EditLocationFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.cancel) {
-            requireActivity().onBackPressed();
+            main.setVisibility(View.VISIBLE);
+            secondary.setVisibility(View.GONE);
         }
         return super.onOptionsItemSelected(item);
     }

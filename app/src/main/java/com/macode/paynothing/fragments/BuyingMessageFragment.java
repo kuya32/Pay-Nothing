@@ -74,7 +74,7 @@ public class BuyingMessageFragment extends Fragment {
         inboxChatsAdapter = new FirebaseRecyclerAdapter<InboxChats, InboxChatsViewHolder>(inboxChatsOptions) {
             @Override
             protected void onBindViewHolder(@NonNull InboxChatsViewHolder holder, int position, @NonNull InboxChats model) {
-                if (firebaseUser.getUid().equals(model.getBuyerId())) {
+                if (firebaseUser.getUid().equals(model.getBuyerId()) && !model.getMostRecentMessage().equals("No recent messages")) {
                     if (model.getMostRecentMessage().length() > 25) {
                         String cutMessage = model.getMostRecentMessage().substring(0, 25);
                         holder.mostRecentMessage.setText(String.format("%s...", cutMessage));

@@ -13,4 +13,5 @@
     <color name="gray">#787878</color>
     <color name="red">#FF0000</color>
     <color name="transparentDark">#80000000</color>
+    <color name="mtrl_textinput_default_box_stroke_color">#80f5c014</color>
 </resources>
