@@ -253,15 +253,27 @@ public class ChatActivity extends AppCompatActivity {
                             @Override
                             public void onComplete(@NonNull Task task) {
                                 if (task.isSuccessful()) {
-                                    HashMap inboxChatHashMap = new HashMap();
-                                    inboxChatHashMap.put("dateOfMostRecentMessage", stringDate);
-                                    inboxChatHashMap.put("mostRecentMessage", String.format("%s: %s", usernameString, chatMessageString));
-                                    inboxChatReference.child(firebaseUser.getUid()).updateChildren(inboxChatHashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    HashMap inboxChatUsersHashMap = new HashMap();
+                                    inboxChatUsersHashMap.put("dateOfMostRecentMessage", stringDate);
+                                    inboxChatUsersHashMap.put("mostRecentMessage", String.format("%s: %s", usernameString, chatMessageString));
+                                    inboxChatReference.child(firebaseUser.getUid()).child(itemKey).updateChildren(inboxChatUsersHashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
                                             if (task.isSuccessful()) {
-                                                messageInput.setText(null);
-                                                Toast.makeText(ChatActivity.this, "Message sent", Toast.LENGTH_SHORT).show();
+                                                HashMap inboxChatSellersHashMap = new HashMap();
+                                                inboxChatSellersHashMap.put("dateOfMostRecentMessage", stringDate);
+                                                inboxChatSellersHashMap.put("mostRecentMessage", String.format("%s: %s", usernameString, chatMessageString));
+                                                inboxChatReference.child(sellersId).child(itemKey).updateChildren(inboxChatSellersHashMap).addOnCompleteListener(new OnCompleteListener() {
+                                                    @Override
+                                                    public void onComplete(@NonNull Task task) {
+                                                        if (task.isSuccessful()) {
+                                                            messageInput.setText(null);
+                                                            Toast.makeText(ChatActivity.this, "Message sent", Toast.LENGTH_SHORT).show();
+                                                        } else {
+                                                            Toast.makeText(ChatActivity.this, "Date of most recent message could not be updated!", Toast.LENGTH_SHORT).show();
+                                                        }
+                                                    }
+                                                });
                                             } else {
                                                 Toast.makeText(ChatActivity.this, "Date of most recent message could not be updated!", Toast.LENGTH_SHORT).show();
                                             }

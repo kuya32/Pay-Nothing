@@ -37,7 +37,7 @@ import java.util.zip.Inflater;
 public class SellingMessageFragment extends Fragment {
 
     private RecyclerView recyclerView;
-    private String sellersId, sellerProfileImage, sellerUsername, sellerStatus, mostRecentMessage, itemKey, itemImage;
+    private String buyerProfileImage, buyerUsername, buyerStatus, mostRecentMessage, itemKey, itemImage;
     private FirebaseAuth firebaseAuth;
     private FirebaseUser firebaseUser;
     private DatabaseReference itemReference, userReference, inboxChatReference, messageReference;
@@ -74,77 +74,70 @@ public class SellingMessageFragment extends Fragment {
     }
 
     private void loadInboxChats() {
-        Query query = inboxChatReference.orderByChild("dateOfMostRecentMessage");
+        Query query = inboxChatReference.child(firebaseUser.getUid());
         inboxChatsOptions = new FirebaseRecyclerOptions.Builder<InboxChats>().setQuery(query, InboxChats.class).build();
         inboxChatsAdapter = new FirebaseRecyclerAdapter<InboxChats, InboxChatsViewHolder>(inboxChatsOptions) {
             @Override
             protected void onBindViewHolder(@NonNull InboxChatsViewHolder holder, int position, @NonNull InboxChats model) {
-                final String inboxChatKey = getRef(position).getKey();
-                sellersId = model.getSellerId();
-                itemKey = model.getItemKey();
-                System.out.println(model.getSellerId() + " HEllo");
-                System.out.println(itemKey);
+                if (firebaseUser.getUid().equals(model.getSellerId())) {
+                    if (model.getMostRecentMessage().length() > 25) {
+                        String cutMessage = model.getMostRecentMessage().substring(0, 25);
+                        holder.mostRecentMessage.setText(String.format("%s...", cutMessage));
+                    }
+                    userReference.child(model.getBuyerId()).addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            if (snapshot.exists()) {
+                                buyerProfileImage = snapshot.child("profileImage").getValue().toString();
+                                buyerUsername = snapshot.child("username").getValue().toString();
+                                buyerStatus = snapshot.child("status").getValue().toString();
+                                if (buyerStatus.equals("Online")) {
+                                    holder.sellerBuyerStatusImage.setColorFilter(Color.GREEN);
+                                }
+
+                                Picasso.get().load(buyerProfileImage).into(holder.sellerBuyerProfileImage);
+                                holder.sellerBuyerUsername.setText(buyerUsername);
+                                holder.sellerBuyerStatus.setText(buyerStatus);
+
+                                itemReference.child(model.getItemKey()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        if (snapshot.exists()) {
+                                            itemImage = snapshot.child("imageUrl").getValue().toString();
+
+                                            Picasso.get().load(itemImage).into(holder.itemImage);
+                                        } else {
+                                            Toast.makeText(requireActivity(), "Sorry, could not grab item's image from firebase!", Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
+                                        Toast.makeText(requireActivity(), "" + error.getMessage().toString(), Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                            } else {
+                                Toast.makeText(requireActivity(), "Sorry, could not grab buyer's info from firebase!", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+                            Toast.makeText(requireActivity(), "" + error.getMessage().toString(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                } else {
+                    holder.sellerBuyerCardView.setVisibility(View.GONE);
+                }
                 holder.sellerBuyerCardView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        System.out.println(getRef(position));
+                        Intent intent = new Intent(requireActivity(), ChatActivity.class);
+                        intent.putExtra("sellersId", model.getBuyerId());
+                        intent.putExtra("itemKey", model.getItemKey());
+                        startActivity(intent);
                     }
                 });
-//                if (firebaseUser.getUid().equals(model.getSellerId())) {
-//                    userReference.child(sellersId).addValueEventListener(new ValueEventListener() {
-//                        @Override
-//                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                            if (snapshot.exists()) {
-//                                sellerProfileImage = snapshot.child("profileImage").getValue().toString();
-//                                sellerUsername = snapshot.child("username").getValue().toString();
-//                                sellerStatus = snapshot.child("status").getValue().toString();
-//
-//                                Picasso.get().load(sellerProfileImage).into(holder.sellerBuyerProfileImage);
-//                                holder.sellerBuyerUsername.setText(sellerUsername);
-//                                if (sellerStatus.equals("Online")) {
-//                                    holder.sellerBuyerStatusImage.setColorFilter(Color.GREEN);
-//                                }
-//                                holder.sellerBuyerStatus.setText(sellerStatus);
-//                                itemReference.child(itemKey).addListenerForSingleValueEvent(new ValueEventListener() {
-//                                    @Override
-//                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                                        if (snapshot.exists()) {
-//                                            itemImage = snapshot.child("imageUrl").getValue().toString();
-//
-//                                            Picasso.get().load(itemImage).into(holder.itemImage);
-//
-//                                        } else {
-//                                            Toast.makeText(requireActivity(), "Sorry, could not get item data from firebase!", Toast.LENGTH_SHORT).show();
-//                                        }
-//                                    }
-//
-//                                    @Override
-//                                    public void onCancelled(@NonNull DatabaseError error) {
-//                                        Toast.makeText(requireActivity(), "" + error.getMessage().toString(), Toast.LENGTH_SHORT).show();
-//                                    }
-//                                });
-//                            } else {
-//                                Toast.makeText(requireActivity(), "Sorry, could not get seller's data from firebase!", Toast.LENGTH_SHORT).show();
-//                            }
-//                        }
-//
-//                        @Override
-//                        public void onCancelled(@NonNull DatabaseError error) {
-//                            Toast.makeText(requireActivity(), "" + error.getMessage().toString(), Toast.LENGTH_SHORT).show();
-//                        }
-//                    });
-//                    holder.sellerBuyerCardView.setOnClickListener(new View.OnClickListener() {
-//                        @Override
-//                        public void onClick(View v) {
-//                            Intent intent = new Intent(requireActivity(), ChatActivity.class);
-//                            intent.putExtra("sellersId", sellersId);
-//                            intent.putExtra("itemKey", itemKey);
-//                            startActivity(intent);
-//                        }
-//                    });
-//                } else {
-//                    holder.sellerBuyerCardView.setVisibility(View.GONE);
-//                }
             }
 
             @NonNull

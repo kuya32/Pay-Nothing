@@ -129,11 +129,11 @@ public class OtherItemDetailActivity extends AppCompatActivity implements OnMapR
                 hashMap.put("buyerId", firebaseUser.getUid());
                 hashMap.put("mostRecentMessage", "No recent messages");
                 hashMap.put("dateOfMostRecentMessage", stringDate);
-                inboxChatReference.child(firebaseUser.getUid()).updateChildren(hashMap).addOnCompleteListener(new OnCompleteListener() {
+                inboxChatReference.child(firebaseUser.getUid()).child(itemKey).updateChildren(hashMap).addOnCompleteListener(new OnCompleteListener() {
                     @Override
                     public void onComplete(@NonNull Task task) {
                         if (task.isSuccessful()) {
-                            inboxChatReference.child(otherUserId).updateChildren(hashMap).addOnCompleteListener(new OnCompleteListener() {
+                            inboxChatReference.child(otherUserId).child(itemKey).updateChildren(hashMap).addOnCompleteListener(new OnCompleteListener() {
                                 @Override
                                 public void onComplete(@NonNull Task task) {
                                     if (task.isSuccessful()) {
