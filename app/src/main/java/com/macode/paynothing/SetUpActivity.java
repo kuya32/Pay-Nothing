@@ -13,6 +13,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -79,6 +80,8 @@ public class SetUpActivity extends AppCompatActivity {
         firebaseUser = firebaseAuth.getCurrentUser();
         databaseReference = FirebaseDatabase.getInstance().getReference().child("Users");
         storageReference = FirebaseStorage.getInstance().getReference().child("ProfileImages");
+
+        phoneNumberInput.getEditText().addTextChangedListener(new PhoneNumberFormattingTextWatcher());
 
         profileImage.setOnClickListener(new View.OnClickListener() {
             @Override

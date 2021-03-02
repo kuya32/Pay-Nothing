@@ -17,9 +17,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.PayNothing">
-        <activity android:name=".HelpCenterActivity"></activity>
-        <activity android:name=".PublicProfileActivity"></activity>
-        <activity android:name=".AccountSettingsActivity"></activity>
+        <activity android:name=".ChatActivity"></activity>
+        <activity android:name=".HelpCenterActivity" />
+        <activity android:name=".PublicProfileActivity" />
+        <activity android:name=".AccountSettingsActivity" />
         <activity android:name=".SavedItemsActivity" />
 
         <meta-data

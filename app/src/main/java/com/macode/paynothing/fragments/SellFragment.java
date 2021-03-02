@@ -204,7 +204,7 @@ public class SellFragment extends Fragment {
                         }
                     });
                 } else {
-                    holder.itemImageView.setVisibility(View.GONE);
+                    holder.sellingItemCardView.setVisibility(View.GONE);
                 }
             }
 

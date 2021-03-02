@@ -46,6 +46,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.database.core.Context;
+import com.macode.paynothing.ChatActivity;
 import com.macode.paynothing.EditItemActivity;
 import com.macode.paynothing.ItemDetailActivity;
 import com.macode.paynothing.R;
@@ -54,6 +55,7 @@ import com.squareup.picasso.Picasso;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -62,14 +64,15 @@ public class OtherItemDetailActivity extends AppCompatActivity implements OnMapR
     private Toolbar itemDetailToolBar;
     private CircleImageView itemDetailSellerImage;
     private ImageView itemDetailImage;
-    private String itemKey, otherUserId, itemTitle, itemImage, itemCategory,  itemCondition, itemBrand, itemModel, itemType, itemDescription, itemLocation, itemPickUpOnly, itemLat, itemLong, itemSellerImageUrl, itemSellerUsername, loyaltyString;
+    private String itemKey, otherUserId, itemTitle, itemImage, itemCategory,  itemCondition, itemBrand, itemModel, itemType, itemDescription, itemLocation, itemPickUpOnly, itemLat, itemLong, itemSellerImageUrl, itemSellerUsername, loyaltyString, stringDate;
     private TextView itemDetailTitle, itemDetailLocation, itemDetailCategory, itemDetailCondition, itemDetailPickUpOnly, itemDetailSellerUsername, itemDetailBrand, itemDetailModel, itemDetailType, itemDetailDescription, loyalty;
     private Boolean itemPickUp, isSaved = false;
     private FirebaseAuth firebaseAuth;
     private FirebaseUser firebaseUser;
-    private DatabaseReference userReference, itemReference, savedItemReference;
+    private DatabaseReference userReference, itemReference, savedItemReference, inboxChatReference;
     private MenuItem savedItem;
     private Menu otherItemDetailTopMenu;
+    private Button messageSellerButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,11 +93,13 @@ public class OtherItemDetailActivity extends AppCompatActivity implements OnMapR
         itemDetailModel = findViewById(R.id.otherItemDetailModel);
         itemDetailType = findViewById(R.id.otherItemDetailType);
         itemDetailDescription = findViewById(R.id.otherItemDetailDescription);
+        messageSellerButton = findViewById(R.id.messageSellerButton);
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
         userReference = FirebaseDatabase.getInstance().getReference().child("Users");
         itemReference = FirebaseDatabase.getInstance().getReference().child("Items");
         savedItemReference = FirebaseDatabase.getInstance().getReference().child("SavedItems");
+        inboxChatReference = FirebaseDatabase.getInstance().getReference().child("InboxChats");
 
         retrieveExtraData();
         otherUserId = itemKey.substring(0, itemKey.indexOf(" "));
@@ -111,6 +116,43 @@ public class OtherItemDetailActivity extends AppCompatActivity implements OnMapR
         } else {
             Toast.makeText(this, "Null Map Fragment", Toast.LENGTH_LONG).show();
         }
+
+        messageSellerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Date date = new Date();
+                SimpleDateFormat format = new SimpleDateFormat("dd-M-yyyy hh:mm:ss", Locale.getDefault());
+                stringDate = format.format(date);
+                HashMap hashMap = new HashMap();
+                hashMap.put("sellerId", otherUserId);
+                hashMap.put("itemKey", itemKey);
+                hashMap.put("buyerId", firebaseUser.getUid());
+                hashMap.put("mostRecentMessage", "No recent messages");
+                hashMap.put("dateOfMostRecentMessage", stringDate);
+                inboxChatReference.child(firebaseUser.getUid()).child(itemKey).updateChildren(hashMap).addOnCompleteListener(new OnCompleteListener() {
+                    @Override
+                    public void onComplete(@NonNull Task task) {
+                        if (task.isSuccessful()) {
+                            inboxChatReference.child(otherUserId).child(itemKey).updateChildren(hashMap).addOnCompleteListener(new OnCompleteListener() {
+                                @Override
+                                public void onComplete(@NonNull Task task) {
+                                    if (task.isSuccessful()) {
+                                        Intent intent = new Intent(OtherItemDetailActivity.this, ChatActivity.class);
+                                        intent.putExtra("sellersId", otherUserId);
+                                        intent.putExtra("itemKey", itemKey);
+                                        startActivity(intent);
+                                    } else {
+                                        Toast.makeText(OtherItemDetailActivity.this, "Chat could not be created!", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
+                        } else {
+                            Toast.makeText(OtherItemDetailActivity.this, "Chat could not be created!", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+            }
+        });
 
     }
 
@@ -174,7 +216,7 @@ public class OtherItemDetailActivity extends AppCompatActivity implements OnMapR
 
     private void saveItem(String itemKey) {
         Date date = new Date();
-        SimpleDateFormat format = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
+        SimpleDateFormat format = new SimpleDateFormat("dd-M-yyyy hh:mm:ss", Locale.getDefault());
         final String stringDate = format.format(date);
         HashMap hashMap = new HashMap();
         hashMap.put("title", itemTitle);
@@ -218,8 +260,8 @@ public class OtherItemDetailActivity extends AppCompatActivity implements OnMapR
                     itemLocation = snapshot.child("location").getValue().toString();
                     itemCategory = snapshot.child("category").getValue().toString();
                     itemCondition = snapshot.child("condition").getValue().toString();
-                    itemPickUpOnly = snapshot.child("pickUpOnly").getValue().toString();
-                    itemPickUpOnly = (itemPickUp = true) ? "Pick Up Only" : "Drop Off";
+                    itemPickUp = (Boolean) snapshot.child("pickUpOnly").getValue();
+                    itemPickUpOnly = (itemPickUp) ? "Pick Up Only" : "Drop Off";
                     itemBrand = snapshot.child("brand").getValue().toString();
                     itemModel = snapshot.child("model").getValue().toString();
                     itemType = snapshot.child("type").getValue().toString();
@@ -255,7 +297,7 @@ public class OtherItemDetailActivity extends AppCompatActivity implements OnMapR
                     itemSellerImageUrl = snapshot.child("profileImage").getValue().toString();
                     itemSellerUsername = snapshot.child("username").getValue().toString();
                     loyaltyString = snapshot.child("dateUserCreated").getValue().toString();
-                    String subLoyaltyString = loyaltyString.substring((loyaltyString.indexOf("-") + 1), loyaltyString.indexOf(" "));
+                    String subLoyaltyString = changeNumberDateToWordedDate(loyaltyString);
 
                     Picasso.get().load(itemSellerImageUrl).into(itemDetailSellerImage);
                     itemDetailSellerUsername.setText(itemSellerUsername);
@@ -306,5 +348,33 @@ public class OtherItemDetailActivity extends AppCompatActivity implements OnMapR
 
             }
         });
+    }
+
+    private String changeNumberDateToWordedDate(String numberedDate) {
+        String refactorNumberedDate;
+        String month = "";
+        String wordedMonth = "";
+        String year = "";
+
+        HashMap<String, String> months = new HashMap<>();
+        months.put("1", "January");
+        months.put("2", "February");
+        months.put("3", "March");
+        months.put("4", "April");
+        months.put("5", "May");
+        months.put("6", "June");
+        months.put("7", "July");
+        months.put("8", "August");
+        months.put("9", "September");
+        months.put("10", "October");
+        months.put("11", "November");
+        months.put("12", "December");
+
+        refactorNumberedDate = numberedDate.substring(numberedDate.indexOf("-") + 1, numberedDate.indexOf(" "));
+        month = refactorNumberedDate.substring(0, refactorNumberedDate.indexOf("-"));
+        wordedMonth = months.get(month);
+        year = refactorNumberedDate.substring(refactorNumberedDate.indexOf("-") + 1);
+
+        return String.format("%s, %s", wordedMonth, year);
     }
 }

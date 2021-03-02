@@ -70,7 +70,7 @@ public class HomeFragment extends Fragment {
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(requireActivity(), 3);
         itemFeedRecyclerView.setLayoutManager(layoutManager);
 
-        loadItems();
+        loadItems("");
 
         return view;
     }
@@ -103,21 +103,23 @@ public class HomeFragment extends Fragment {
 
             @Override
             public boolean onQueryTextChange(String newText) {
+                loadItems(newText);
                 return false;
             }
         });
     }
 
-    private void loadItems() {
-        Query query = itemReference.orderByChild("dateItemPosted");
+    private void loadItems(String string) {
+        Query query = itemReference.orderByChild("title").startAt(string).endAt(string + "\uf8ff");
         itemsOptions = new FirebaseRecyclerOptions.Builder<Items>().setQuery(query, Items.class).build();
         itemsAdapter = new FirebaseRecyclerAdapter<Items, ItemsViewHolder>(itemsOptions) {
             @Override
             protected void onBindViewHolder(@NonNull ItemsViewHolder holder, int position, @NonNull Items model) {
                 final String itemKey = getRef(position).getKey();
                 refactoredItemKey = itemKey.substring(0, itemKey.indexOf(" "));
-                if (!firebaseUser.getUid().equals(refactoredItemKey)) {
+                if (!firebaseUser.getUid().equals(refactoredItemKey) && !model.getSold().equals(true)) {
                     Picasso.get().load(model.getImageUrl()).into(holder.itemImageView);
+
                     holder.itemImageView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -128,8 +130,8 @@ public class HomeFragment extends Fragment {
                     });
                 } else {
                     holder.itemImageView.setVisibility(View.GONE);
+                    holder.itemView.setLayoutParams(new RecyclerView.LayoutParams(0, 0));
                 }
-
             }
 
             @NonNull
@@ -143,4 +145,6 @@ public class HomeFragment extends Fragment {
         itemFeedRecyclerView.setAdapter(itemsAdapter);
         itemFeedRecyclerView.setHasFixedSize(true);
     }
+
+
 }
