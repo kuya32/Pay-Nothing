@@ -117,8 +117,9 @@ public class HomeFragment extends Fragment {
             protected void onBindViewHolder(@NonNull ItemsViewHolder holder, int position, @NonNull Items model) {
                 final String itemKey = getRef(position).getKey();
                 refactoredItemKey = itemKey.substring(0, itemKey.indexOf(" "));
-                if (!firebaseUser.getUid().equals(refactoredItemKey)) {
+                if (!firebaseUser.getUid().equals(refactoredItemKey) && !model.getSold().equals(true)) {
                     Picasso.get().load(model.getImageUrl()).into(holder.itemImageView);
+
                     holder.itemImageView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -129,8 +130,8 @@ public class HomeFragment extends Fragment {
                     });
                 } else {
                     holder.itemImageView.setVisibility(View.GONE);
+                    holder.itemView.setLayoutParams(new RecyclerView.LayoutParams(0, 0));
                 }
-
             }
 
             @NonNull

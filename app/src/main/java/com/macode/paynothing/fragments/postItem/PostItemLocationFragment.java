@@ -321,6 +321,7 @@ public class PostItemLocationFragment extends Fragment {
                             hashMap.put("latitude", latString);
                             hashMap.put("longitude", longString);
                             hashMap.put("sold", sold);
+                            hashMap.put("owner", firebaseUser.getUid());
                             itemReference.child(firebaseUser.getUid() + " " + stringDate).updateChildren(hashMap).addOnCompleteListener(new OnCompleteListener() {
                                 @Override
                                 public void onComplete(@NonNull Task task) {

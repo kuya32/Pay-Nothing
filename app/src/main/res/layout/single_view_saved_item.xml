@@ -31,6 +31,29 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
+            <RelativeLayout
+                android:id="@+id/savedItemSoldRelativeLayout"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:layout_margin="10dp"
+                android:visibility="invisible"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:background="@color/transparentDark">
+
+                <TextView
+                    android:id="@+id/savedItemSoldIndicator"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="SOLD"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/primaryColor"
+                    android:layout_centerInParent="true" />
+
+            </RelativeLayout>
+
             <TextView
                 android:id="@+id/savedItemTitle"
                 android:layout_width="0dp"

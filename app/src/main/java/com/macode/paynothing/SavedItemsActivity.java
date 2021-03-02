@@ -21,9 +21,12 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.macode.paynothing.activities.OtherItemDetailActivity;
 import com.macode.paynothing.utilities.SavedItems;
 import com.macode.paynothing.utilities.SavedItemsViewHolder;
@@ -37,7 +40,7 @@ public class SavedItemsActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private FirebaseAuth firebaseAuth;
     private FirebaseUser firebaseUser;
-    private DatabaseReference savedItemReference;
+    private DatabaseReference savedItemReference, itemReference;
     private FirebaseRecyclerAdapter<SavedItems, SavedItemsViewHolder> savedItemsAdapter;
     private FirebaseRecyclerOptions<SavedItems> savedItemsOptions;
     private RecyclerView savedItemRecyclerView;
@@ -51,6 +54,7 @@ public class SavedItemsActivity extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
         savedItemReference = FirebaseDatabase.getInstance().getReference().child("SavedItems");
+        itemReference = FirebaseDatabase.getInstance().getReference().child("Items");
         savedItemRecyclerView = findViewById(R.id.savedItemsRecyclerView);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(SavedItemsActivity.this);
         savedItemRecyclerView.setLayoutManager(layoutManager);
@@ -74,6 +78,23 @@ public class SavedItemsActivity extends AppCompatActivity {
                 String timeAgo = calculateTimeAgo(model.getDateItemSaved());
                 holder.dateSavedItem.setText(String.format("Item saved %s", timeAgo));
 
+                itemReference.child(itemKey).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if (snapshot.exists()) {
+                            if (snapshot.child("sold").getValue().equals(true)) {
+                                holder.savedItemSoldRelativeLayout.setVisibility(View.VISIBLE);
+                            }
+                        } else {
+                            Toast.makeText(SavedItemsActivity.this, "Sorry, could not retrieve item data from firebase!", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        Toast.makeText(SavedItemsActivity.this, "" + error.toString(), Toast.LENGTH_SHORT).show();
+                    }
+                });
                 holder.savedItemCardView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

@@ -10,6 +10,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -79,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 return false;
             }
-            return false;
+            return true;
         }
     };
 }
