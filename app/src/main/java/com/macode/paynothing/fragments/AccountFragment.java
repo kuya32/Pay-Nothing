@@ -25,11 +25,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.macode.paynothing.AccountSettingsActivity;
-import com.macode.paynothing.HelpCenterActivity;
 import com.macode.paynothing.LoginActivity;
 import com.macode.paynothing.PublicProfileActivity;
 import com.macode.paynothing.R;
 import com.macode.paynothing.SavedItemsActivity;
+import com.macode.paynothing.activities.AboutMeActivity;
 import com.squareup.picasso.Picasso;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -106,7 +106,7 @@ public class AccountFragment extends Fragment {
         accountHelpCenter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(requireActivity(), HelpCenterActivity.class);
+                Intent intent = new Intent(requireActivity(), AboutMeActivity.class);
                 startActivity(intent);
             }
         });
