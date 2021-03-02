@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.OtherPublicProfileActivity">
+
+    <include
+        android:id="@+id/otherPublicProfileToolbar"
+        layout="@layout/main_toolbar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/otherPublicProfileCardView"
+        android:layout_width="0dp"
+        android:layout_height="100dp"
+        android:layout_margin="20dp"
+        app:cardBackgroundColor="@color/primaryColor"
+        app:cardCornerRadius="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/otherPublicProfileToolbar">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/otherPublicProfileImage"
+                android:layout_width="100dp"
+                android:layout_height="0dp"
+                android:layout_margin="5dp"
+                android:src="@drawable/profile_image"
+                app:civ_border_color="@color/secondaryColor"
+                app:civ_border_width="2dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/otherPublicProfileName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp"
+                android:hint="Some Person"
+                android:textColor="@color/secondaryColor"
+                android:textColorHint="@color/secondaryColor"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/otherPublicProfileImage"
+                app:layout_constraintTop_toTopOf="@+id/otherPublicProfileImage" />
+
+            <TextView
+                android:id="@+id/otherPublicProfileDateJoined"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp"
+                android:hint="Some Time"
+                android:textColor="@color/secondaryColor"
+                android:textColorHint="@color/secondaryColor"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@+id/otherPublicProfileLocation"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/otherPublicProfileImage"
+                app:layout_constraintTop_toBottomOf="@+id/otherPublicProfileName" />
+
+            <TextView
+                android:id="@+id/otherPublicProfileLocation"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp"
+                android:hint="Some Location"
+                android:textColor="@color/secondaryColor"
+                android:textColorHint="@color/secondaryColor"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/otherPublicProfileImage"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/otherPublicProfileImage"
+                app:layout_constraintTop_toBottomOf="@+id/otherPublicProfileDateJoined" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+
+    <View
+        android:id="@+id/publicProfileDividerView"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/item_detail_bottom_border"
+        app:layout_constraintEnd_toEndOf="@+id/otherPublicProfileCardView"
+        app:layout_constraintStart_toStartOf="@+id/otherPublicProfileCardView"
+        app:layout_constraintTop_toBottomOf="@+id/otherPublicProfileCardView" />
+
+    <TextView
+        android:id="@+id/otherPublicProfileUsersItems"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:text="Items from this seller"
+        android:textColor="@color/primaryColor"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/publicProfileDividerView"
+        app:layout_constraintStart_toStartOf="@+id/publicProfileDividerView"
+        app:layout_constraintTop_toBottomOf="@+id/publicProfileDividerView" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/otherPublicProfileUsersItemsRecyclerView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/otherPublicProfileUsersItems" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

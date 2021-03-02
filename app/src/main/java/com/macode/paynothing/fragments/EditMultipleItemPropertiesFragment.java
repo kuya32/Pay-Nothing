@@ -414,8 +414,8 @@ public class EditMultipleItemPropertiesFragment extends Fragment {
     }
 
     public void addingCategorySpinner() {
-        ArrayAdapter<String> categoryAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.categories));
-        categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
+        ArrayAdapter<String> categoryAdapter = new ArrayAdapter<String>(getContext(), R.layout.spinner_item, getResources().getStringArray(R.array.categories));
+        categoryAdapter.setDropDownViewResource(R.layout.custom_spinner_dropdown_item);
         categorySpinner.setAdapter(categoryAdapter);
 
         categorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -432,8 +432,8 @@ public class EditMultipleItemPropertiesFragment extends Fragment {
     }
 
     public void addingConditionSpinner() {
-        ArrayAdapter<String> categoryAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.condition));
-        categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
+        ArrayAdapter<String> categoryAdapter = new ArrayAdapter<String>(getContext(), R.layout.spinner_item, getResources().getStringArray(R.array.condition));
+        categoryAdapter.setDropDownViewResource(R.layout.custom_spinner_dropdown_item);
         conditionSpinner.setAdapter(categoryAdapter);
 
         conditionSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

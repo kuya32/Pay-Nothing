@@ -1,4 +1,4 @@
-package com.macode.paynothing;
+package com.macode.paynothing.activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -30,7 +30,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import com.macode.paynothing.activities.OtherItemDetailActivity;
+import com.macode.paynothing.ItemDetailActivity;
+import com.macode.paynothing.PublicProfileActivity;
+import com.macode.paynothing.R;
 import com.macode.paynothing.utilities.Items;
 import com.macode.paynothing.utilities.ItemsViewHolder;
 import com.squareup.picasso.Picasso;
@@ -40,12 +42,12 @@ import java.util.HashMap;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class PublicProfileActivity extends AppCompatActivity {
+public class OtherPublicProfileActivity extends AppCompatActivity {
 
     private Toolbar toolbar;
     private CircleImageView profileImage;
     private TextView userName, userDateJoined, userLocation;
-    private String nameString, firstNameString, lastNameString, imageString, dateJoinedString, refactoredDateJoinedString, locationString, refactoredItemKey;
+    private String nameString, firstNameString, lastNameString, imageString, dateJoinedString, refactoredDateJoinedString, locationString, refactoredItemKey, sellersId;
     private FirebaseAuth firebaseAuth;
     private FirebaseUser firebaseUser;
     private DatabaseReference userReference, itemReference;
@@ -56,18 +58,18 @@ public class PublicProfileActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_public_profile);
+        setContentView(R.layout.activity_other_public_profile);
 
-        toolbar = findViewById(R.id.publicProfileToolbar);
-        profileImage = findViewById(R.id.publicProfileImage);
-        userName = findViewById(R.id.publicProfileName);
-        userDateJoined = findViewById(R.id.publicProfileDateJoined);
-        userLocation = findViewById(R.id.publicProfileLocation);
+        toolbar = findViewById(R.id.otherPublicProfileToolbar);
+        profileImage = findViewById(R.id.otherPublicProfileImage);
+        userName = findViewById(R.id.otherPublicProfileName);
+        userDateJoined = findViewById(R.id.otherPublicProfileDateJoined);
+        userLocation = findViewById(R.id.otherPublicProfileLocation);
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
         userReference = FirebaseDatabase.getInstance().getReference().child("Users");
         itemReference = FirebaseDatabase.getInstance().getReference().child("Items");
-        userItemsRecyclerView = findViewById(R.id.publicProfileUsersItemsRecyclerView);
+        userItemsRecyclerView = findViewById(R.id.otherPublicProfileUsersItemsRecyclerView);
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(this, 3);
         userItemsRecyclerView.setLayoutManager(layoutManager);
 
@@ -75,8 +77,11 @@ public class PublicProfileActivity extends AppCompatActivity {
         StrictMode.setVmPolicy(builder.build());
 
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("My Profile");
+//        getSupportActionBar().setTitle("My Profile");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        Intent intent = getIntent();
+        sellersId = intent.getStringExtra("sellersId");
 
         loadUserInformation();
         loadUserItems();
@@ -106,7 +111,7 @@ public class PublicProfileActivity extends AppCompatActivity {
     }
 
     private void loadUserInformation() {
-        userReference.child(firebaseUser.getUid()).addValueEventListener(new ValueEventListener() {
+        userReference.child(sellersId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
@@ -124,7 +129,7 @@ public class PublicProfileActivity extends AppCompatActivity {
                     userLocation.setText(locationString);
 
                 } else {
-                    Toast.makeText(PublicProfileActivity.this, "Sorry, could not retrieve user information from firebase!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(OtherPublicProfileActivity.this, "Sorry, could not retrieve user information from firebase!", Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -143,12 +148,13 @@ public class PublicProfileActivity extends AppCompatActivity {
             protected void onBindViewHolder(@NonNull ItemsViewHolder holder, int position, @NonNull Items model) {
                 final String itemKey = getRef(position).getKey();
                 refactoredItemKey = itemKey.substring(0, itemKey.indexOf(" "));
-                if (firebaseUser.getUid().equals(refactoredItemKey)) {
+                System.out.println(refactoredItemKey + " HELLO");
+                if (sellersId.equals(refactoredItemKey)) {
                     Picasso.get().load(model.getImageUrl()).into(holder.itemImageView);
                     holder.itemImageView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            Intent intent = new Intent(PublicProfileActivity.this, ItemDetailActivity.class);
+                            Intent intent = new Intent(OtherPublicProfileActivity.this, OtherItemDetailActivity.class);
                             intent.putExtra("itemKey", itemKey);
                             startActivity(intent);
                         }

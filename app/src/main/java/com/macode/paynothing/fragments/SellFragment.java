@@ -1,8 +1,10 @@
 package com.macode.paynothing.fragments;
 
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -13,6 +15,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.StrictMode;
 import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,6 +43,8 @@ import com.macode.paynothing.utilities.Items;
 import com.macode.paynothing.utilities.SellItemsViewHolder;
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
+
 public class SellFragment extends Fragment {
 
     private Toolbar toolbar;
@@ -64,6 +69,8 @@ public class SellFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+        StrictMode.setVmPolicy(builder.build());
     }
 
     @Override
@@ -191,7 +198,13 @@ public class SellFragment extends Fragment {
                     holder.shareItem.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-
+                            ApplicationInfo api = requireContext().getApplicationInfo();
+                            String apkPath = api.sourceDir;
+                            Intent intent = new Intent(Intent.ACTION_SEND);
+                            intent.setType("application/vnd.android.package-archive");
+                            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                            intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(new File(apkPath)));
+                            startActivity(Intent.createChooser(intent, "ShareVia"));
                         }
                     });
 

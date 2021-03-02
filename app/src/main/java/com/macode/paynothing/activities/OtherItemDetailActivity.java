@@ -4,19 +4,23 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
+import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 
 import android.content.ClipData;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ApplicationInfo;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.Icon;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
@@ -52,6 +56,7 @@ import com.macode.paynothing.ItemDetailActivity;
 import com.macode.paynothing.R;
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -67,6 +72,7 @@ public class OtherItemDetailActivity extends AppCompatActivity implements OnMapR
     private String itemKey, otherUserId, itemTitle, itemImage, itemCategory,  itemCondition, itemBrand, itemModel, itemType, itemDescription, itemLocation, itemPickUpOnly, itemLat, itemLong, itemSellerImageUrl, itemSellerUsername, loyaltyString, stringDate;
     private TextView itemDetailTitle, itemDetailLocation, itemDetailCategory, itemDetailCondition, itemDetailPickUpOnly, itemDetailSellerUsername, itemDetailBrand, itemDetailModel, itemDetailType, itemDetailDescription, loyalty;
     private Boolean itemPickUp, isSaved = false;
+    private CardView sellerCardView;
     private FirebaseAuth firebaseAuth;
     private FirebaseUser firebaseUser;
     private DatabaseReference userReference, itemReference, savedItemReference, inboxChatReference;
@@ -94,12 +100,16 @@ public class OtherItemDetailActivity extends AppCompatActivity implements OnMapR
         itemDetailType = findViewById(R.id.otherItemDetailType);
         itemDetailDescription = findViewById(R.id.otherItemDetailDescription);
         messageSellerButton = findViewById(R.id.messageSellerButton);
+        sellerCardView = findViewById(R.id.otherCardView);
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
         userReference = FirebaseDatabase.getInstance().getReference().child("Users");
         itemReference = FirebaseDatabase.getInstance().getReference().child("Items");
         savedItemReference = FirebaseDatabase.getInstance().getReference().child("SavedItems");
         inboxChatReference = FirebaseDatabase.getInstance().getReference().child("InboxChats");
+
+        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+        StrictMode.setVmPolicy(builder.build());
 
         retrieveExtraData();
         otherUserId = itemKey.substring(0, itemKey.indexOf(" "));
@@ -154,6 +164,15 @@ public class OtherItemDetailActivity extends AppCompatActivity implements OnMapR
             }
         });
 
+        sellerCardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(OtherItemDetailActivity.this, OtherPublicProfileActivity.class);
+                intent.putExtra("sellersId", otherUserId);
+                startActivity(intent);
+            }
+        });
+
     }
 
     @Override
@@ -173,6 +192,14 @@ public class OtherItemDetailActivity extends AppCompatActivity implements OnMapR
         } else if (item.getItemId() == R.id.saveItem && !isSaved) {
             saveItem(itemKey);
             isSaved = true;
+        } else if (item.getItemId() == R.id.share) {
+            ApplicationInfo api = getApplicationContext().getApplicationInfo();
+            String apkPath = api.sourceDir;
+            Intent intent = new Intent(Intent.ACTION_SEND);
+            intent.setType("application/vnd.android.package-archive");
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(new File(apkPath)));
+            startActivity(Intent.createChooser(intent, "ShareVia"));
         } else if (item.getItemId() == android.R.id.home) {
             finish();
         }
