@@ -17,7 +17,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.PayNothing">
-        <activity android:name=".activities.OtherPublicProfileActivity"></activity>
+        <activity android:name=".activities.AboutMeActivity"></activity>
+        <activity android:name=".activities.OtherPublicProfileActivity" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -30,7 +31,6 @@
         </provider>
 
         <activity android:name=".ChatActivity" />
-        <activity android:name=".HelpCenterActivity" />
         <activity android:name=".PublicProfileActivity" />
         <activity android:name=".AccountSettingsActivity" />
         <activity android:name=".SavedItemsActivity" />

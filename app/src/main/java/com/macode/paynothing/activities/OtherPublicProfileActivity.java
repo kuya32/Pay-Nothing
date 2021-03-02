@@ -77,7 +77,6 @@ public class OtherPublicProfileActivity extends AppCompatActivity {
         StrictMode.setVmPolicy(builder.build());
 
         setSupportActionBar(toolbar);
-//        getSupportActionBar().setTitle("My Profile");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         Intent intent = getIntent();
@@ -119,6 +118,7 @@ public class OtherPublicProfileActivity extends AppCompatActivity {
                     firstNameString = snapshot.child("firstName").getValue().toString();
                     lastNameString = snapshot.child("lastName").getValue().toString();
                     nameString = String.format("%s %s", firstNameString, lastNameString);
+                    getSupportActionBar().setTitle(String.format("%s's Profile", nameString));
                     dateJoinedString = snapshot.child("dateUserCreated").getValue().toString();
                     refactoredDateJoinedString = changeNumberDateToWordedDate(dateJoinedString);
                     locationString = snapshot.child("location").getValue().toString();
@@ -148,7 +148,6 @@ public class OtherPublicProfileActivity extends AppCompatActivity {
             protected void onBindViewHolder(@NonNull ItemsViewHolder holder, int position, @NonNull Items model) {
                 final String itemKey = getRef(position).getKey();
                 refactoredItemKey = itemKey.substring(0, itemKey.indexOf(" "));
-                System.out.println(refactoredItemKey + " HELLO");
                 if (sellersId.equals(refactoredItemKey)) {
                     Picasso.get().load(model.getImageUrl()).into(holder.itemImageView);
                     holder.itemImageView.setOnClickListener(new View.OnClickListener() {
