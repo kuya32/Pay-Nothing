@@ -1,4 +1,4 @@
-package com.macode.paynothing;
+package com.macode.paynothing.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
 
+import com.macode.paynothing.R;
 import com.macode.paynothing.fragments.postItem.PostItemImageFragment;
 
 public class PostActivity extends AppCompatActivity {

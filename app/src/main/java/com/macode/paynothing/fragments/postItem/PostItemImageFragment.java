@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -30,13 +29,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.material.textfield.TextInputLayout;
-import com.macode.paynothing.PostActivity;
+import com.macode.paynothing.activities.PostActivity;
 import com.macode.paynothing.R;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.zip.Inflater;
 
 public class PostItemImageFragment extends Fragment {
 

@@ -1,4 +1,4 @@
-package com.macode.paynothing;
+package com.macode.paynothing.activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -27,7 +27,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import com.macode.paynothing.activities.OtherItemDetailActivity;
+import com.macode.paynothing.R;
 import com.macode.paynothing.utilities.SavedItems;
 import com.macode.paynothing.utilities.SavedItemsViewHolder;
 import com.squareup.picasso.Picasso;

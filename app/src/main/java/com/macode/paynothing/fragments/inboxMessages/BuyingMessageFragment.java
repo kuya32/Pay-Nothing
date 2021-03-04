@@ -1,4 +1,4 @@
-package com.macode.paynothing.fragments;
+package com.macode.paynothing.fragments.inboxMessages;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -24,7 +24,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import com.macode.paynothing.ChatActivity;
+import com.macode.paynothing.activities.ChatActivity;
 import com.macode.paynothing.R;
 import com.macode.paynothing.utilities.InboxChats;
 import com.macode.paynothing.utilities.InboxChatsViewHolder;

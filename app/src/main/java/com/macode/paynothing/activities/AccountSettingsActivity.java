@@ -1,4 +1,4 @@
-package com.macode.paynothing;
+package com.macode.paynothing.activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,6 +22,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.macode.paynothing.R;
 import com.macode.paynothing.fragments.accountSettings.AuthenticateUserFragment;
 import com.macode.paynothing.fragments.accountSettings.EditEmailFragment;
 import com.macode.paynothing.fragments.accountSettings.EditLocationFragment;
