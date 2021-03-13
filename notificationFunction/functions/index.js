@@ -18,9 +18,11 @@ exports.sendNotification = functions.database.ref("/Notifications/{user_id}/{not
 
   return fromUser.then((fromUserResult) => {
     // eslint-disable-next-line max-len
-    const userQuery = admin.database().ref(`/Users/${fromUserResult.val().from}/username`).once("value");
+    const userFromQuery = admin.database().ref(`/Users/${fromUserResult.val().from}/username`).once("value");
+    // eslint-disable-next-line max-len
+    const item = fromUserResult.val().itemKey;
 
-    return userQuery.then((userResult) => {
+    return userFromQuery.then((userResult) => {
       const username = userResult.val();
 
       // eslint-disable-next-line max-len
@@ -33,6 +35,11 @@ exports.sendNotification = functions.database.ref("/Notifications/{user_id}/{not
           notification: {
             title: "New Message",
             body: `New message from ${username}`,
+            click_action: "com.macode.paynothing_TARGET_NOTIFICATION",
+          },
+          data: {
+            itemKey: item,
+            otherUserId: fromUserResult.val().from,
           },
         };
 
