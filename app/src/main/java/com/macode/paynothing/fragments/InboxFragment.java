@@ -10,11 +10,11 @@ import androidx.viewpager.widget.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
-import android.widget.TextView;
 
 import com.google.android.material.tabs.TabLayout;
 import com.macode.paynothing.R;
+import com.macode.paynothing.fragments.inboxMessages.BuyingMessageFragment;
+import com.macode.paynothing.fragments.inboxMessages.SellingMessageFragment;
 import com.macode.paynothing.utilities.ViewPagerAdapter;
 
 public class InboxFragment extends Fragment {

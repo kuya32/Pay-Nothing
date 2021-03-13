@@ -1,4 +1,4 @@
-package com.macode.paynothing;
+package com.macode.paynothing.activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -6,11 +6,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.util.Base64;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
@@ -27,11 +23,9 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.macode.paynothing.R;
 import com.macode.paynothing.fragments.EditMultipleItemPropertiesFragment;
-import com.macode.paynothing.fragments.accountSettings.AuthenticateUserFragment;
-import com.macode.paynothing.fragments.postItem.PostItemCategoryFragment;
 import com.squareup.picasso.Picasso;
 
 public class EditItemActivity extends AppCompatActivity {

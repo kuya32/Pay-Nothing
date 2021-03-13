@@ -24,11 +24,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.macode.paynothing.AccountSettingsActivity;
-import com.macode.paynothing.LoginActivity;
-import com.macode.paynothing.PublicProfileActivity;
+import com.macode.paynothing.activities.AccountSettingsActivity;
+import com.macode.paynothing.activities.LoginActivity;
+import com.macode.paynothing.activities.PublicProfileActivity;
 import com.macode.paynothing.R;
-import com.macode.paynothing.SavedItemsActivity;
+import com.macode.paynothing.activities.SavedItemsActivity;
 import com.macode.paynothing.activities.AboutMeActivity;
 import com.squareup.picasso.Picasso;
 
