@@ -37,6 +37,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             clickAction = remoteMessage.getNotification().getClickAction();
             sellersId = remoteMessage.getData().get("otherUserId");
             itemKey = remoteMessage.getData().get("itemKey");
+            System.out.println("VERY CLOSE TO LOSING EVERYTHING!");
         }
 
         showNotification(notificationTitle, notificationBody, clickAction, sellersId, itemKey);
