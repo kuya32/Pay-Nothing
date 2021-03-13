@@ -2,13 +2,13 @@ package com.macode.paynothing.utilities;
 
 public class Items {
 
-    private String dateItemPosted, userId, title, imageUrl, category, condition, brand, model, type, description, location, latitude, longitude;
+    private String dateItemPosted, userId, title, imageUrl, category, condition, brand, model, type, description, location, latitude, longitude, owner;
     private Boolean pickUpOnly, sold;
 
     public Items() {
     }
 
-    public Items(String dateItemPosted, String userId, String title, String imageUrl, String category, String condition, String brand, String model, String type, String description, String location, String latitude, String longitude, Boolean pickUpOnly, Boolean sold) {
+    public Items(String dateItemPosted, String userId, String title, String imageUrl, String category, String condition, String brand, String model, String type, String description, String location, String latitude, String longitude, Boolean pickUpOnly, Boolean sold, String owner) {
         this.dateItemPosted = dateItemPosted;
         this.userId = userId;
         this.title = title;
@@ -24,6 +24,7 @@ public class Items {
         this.longitude = longitude;
         this.pickUpOnly = pickUpOnly;
         this.sold = sold;
+        this.owner = owner;
     }
 
     public String getDateItemPosted() {
@@ -144,5 +145,13 @@ public class Items {
 
     public void setSold(Boolean sold) {
         this.sold = sold;
+    }
+
+    public String getOwner() {
+        return owner;
+    }
+
+    public void setOwner(String owner) {
+        this.owner = owner;
     }
 }
