@@ -79,6 +79,8 @@ public class SellingMessageFragment extends Fragment {
                     if (model.getMostRecentMessage().length() > 25) {
                         String cutMessage = model.getMostRecentMessage().substring(0, 25);
                         holder.mostRecentMessage.setText(String.format("%s...", cutMessage));
+                    } else {
+                        holder.mostRecentMessage.setText(model.getMostRecentMessage());
                     }
                     userReference.child(model.getBuyerId()).addValueEventListener(new ValueEventListener() {
                         @Override

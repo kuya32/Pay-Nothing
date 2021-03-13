@@ -6,6 +6,10 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.format.DateUtils;
@@ -32,12 +36,6 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.macode.paynothing.R;
-import com.macode.paynothing.notifications.APIService;
-import com.macode.paynothing.notifications.Client;
-import com.macode.paynothing.notifications.Data;
-import com.macode.paynothing.notifications.MyResponse;
-import com.macode.paynothing.notifications.Sender;
-import com.macode.paynothing.notifications.Token;
 import com.macode.paynothing.utilities.Chats;
 import com.macode.paynothing.utilities.ChatsViewHolder;
 import com.squareup.picasso.Picasso;
@@ -49,26 +47,22 @@ import java.util.HashMap;
 import java.util.Locale;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class ChatActivity extends AppCompatActivity {
 
     private Toolbar toolbar;
     private CircleImageView sellersProfileImage;
     private TextView sellersUsername, sellersLocation, sellersStatus;
-    private Boolean seen = false, notify = false;
+    private Boolean seen = false;
     private EditText messageInput;
     private ImageView itemImage, addImageButton, sendMessageButton, sellersStatusImage;
     private RecyclerView chatRecyclerView;
-    private String sellersId, itemKey, itemTitle, sellersUsernameString, sellersProfileImageString, sellersLocationString, sellersStatusString, chatMessageString, userProfileImageString, usernameString, stringDate, timeAgo, itemImageString, senderUsername;
-    private DatabaseReference userReference, itemReference, messageReference, inboxChatReference, tokenReference;
+    private String sellersId, userId, itemKey, itemTitle, sellersUsernameString, sellersProfileImageString, sellersLocationString, sellersStatusString, chatMessageString, userProfileImageString, usernameString, stringDate, timeAgo, itemImageString, senderUsername;
+    private DatabaseReference userReference, itemReference, messageReference, inboxChatReference, notificationReference;
     private FirebaseAuth firebaseAuth;
     private FirebaseUser firebaseUser;
     private FirebaseRecyclerOptions<Chats> chatOptions;
     private FirebaseRecyclerAdapter<Chats, ChatsViewHolder> chatAdapter;
-    private APIService apiService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,7 +85,7 @@ public class ChatActivity extends AppCompatActivity {
         itemReference = FirebaseDatabase.getInstance().getReference().child("Items");
         messageReference = FirebaseDatabase.getInstance().getReference().child("Messages");
         inboxChatReference = FirebaseDatabase.getInstance().getReference().child("InboxChats");
-        tokenReference = FirebaseDatabase.getInstance().getReference().child("Tokens");
+        notificationReference = FirebaseDatabase.getInstance().getReference().child("Notifications");
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
 
@@ -99,8 +93,7 @@ public class ChatActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         sellersId = getIntent().getStringExtra("sellersId");
         itemKey = getIntent().getStringExtra("itemKey");
-
-        apiService = Client.getClient("https://fcm.googleapis.com/").create(APIService.class);
+        userId = getIntent().getStringExtra("userId");
 
         loadUserData();
         loadSellerData();
@@ -120,14 +113,8 @@ public class ChatActivity extends AppCompatActivity {
                 sendMessage();
             }
         });
-
-        updateToken(FirebaseInstanceId.getInstance().getToken());
     }
 
-    private void updateToken(String token) {
-        Token token1 = new Token(token);
-        tokenReference.child(firebaseUser.getUid()).setValue(token1);
-    }
 
 
     private void loadUserData() {
@@ -251,7 +238,6 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void sendMessage() {
-        notify = true;
         chatMessageString = messageInput.getText().toString();
         Date date = new Date();
         SimpleDateFormat format = new SimpleDateFormat("dd-M-yyyy hh:mm:ss", Locale.getDefault());
@@ -286,25 +272,23 @@ public class ChatActivity extends AppCompatActivity {
                                                     @Override
                                                     public void onComplete(@NonNull Task task) {
                                                         if (task.isSuccessful()) {
-                                                            userReference.child(firebaseUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                                            HashMap notificationHashMap = new HashMap();
+                                                            notificationHashMap.put("from", firebaseUser.getUid());
+                                                            notificationHashMap.put("type", "message");
+                                                            notificationHashMap.put("itemKey", itemKey);
+                                                            notificationHashMap.put("otherUserId", sellersId);
+                                                            notificationReference.child(sellersId).push().updateChildren(notificationHashMap).addOnCompleteListener(new OnCompleteListener() {
                                                                 @Override
-                                                                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                                    if (snapshot.exists()) {
-                                                                        usernameString = snapshot.child("username").getValue().toString();
-                                                                        if (notify) {
-                                                                            sendMessageNotification(sellersId, usernameString, chatMessageString);
-                                                                        }
-                                                                        notify = false;
+                                                                public void onComplete(@NonNull Task task) {
+                                                                    if (task.isSuccessful()) {
+                                                                        messageInput.setText(null);
+                                                                        Toast.makeText(ChatActivity.this, "Message sent", Toast.LENGTH_SHORT).show();
+                                                                    } else {
+                                                                        Toast.makeText(ChatActivity.this, "Notification could not be saved!", Toast.LENGTH_SHORT).show();
                                                                     }
                                                                 }
-
-                                                                @Override
-                                                                public void onCancelled(@NonNull DatabaseError error) {
-
-                                                                }
                                                             });
-                                                            messageInput.setText(null);
-                                                            Toast.makeText(ChatActivity.this, "Message sent", Toast.LENGTH_SHORT).show();
+
                                                         } else {
                                                             Toast.makeText(ChatActivity.this, "Date of most recent message could not be updated!", Toast.LENGTH_SHORT).show();
                                                         }
@@ -327,78 +311,6 @@ public class ChatActivity extends AppCompatActivity {
             });
         }
     }
-
-    private void sendMessageNotification(String sellersId, String usernameString, String chatMessageString) {
-        Query query = tokenReference.orderByKey().equalTo(sellersId);
-        query.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists()) {
-                    for (DataSnapshot snapshot1 : snapshot.getChildren()) {
-                        Token token = snapshot1.getValue(Token.class);
-                        Data data = new Data(firebaseUser.getUid(), String.format("%s: %s", usernameString, chatMessageString), "New Message", sellersId, R.drawable.pay_nothing_logo);
-
-                        Sender sender = new Sender(data, token.getToken());
-
-                        apiService.sendNotification(sender)
-                                .enqueue(new Callback<MyResponse>() {
-                                    @Override
-                                    public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
-                                        if (response.code() == 200) {
-                                            if (response.body().success != 1) {
-                                                Toast.makeText(ChatActivity.this, "Failed!", Toast.LENGTH_SHORT).show();
-                                            }
-                                        }
-                                    }
-
-                                    @Override
-                                    public void onFailure(Call<MyResponse> call, Throwable t) {
-
-                                    }
-                                });
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-    }
-
-//    private void messageNotification(String chatMessageString) {
-//        userReference.child(firebaseUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                if (snapshot.exists()) {
-//                    usernameString = snapshot.child("username").getValue().toString();
-//                    NotificationCompat.Builder builder = new NotificationCompat.Builder(ChatActivity.this, "message")
-//                            .setSmallIcon(R.drawable.pay_nothing_logo)
-//                            .setContentTitle("New message")
-//                            .setContentText(String.format("%s: %s", usernameString, chatMessageString))
-//                            .setStyle(new NotificationCompat.BigTextStyle())
-//                            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-//                            .setAutoCancel(true);
-//
-//                    Intent intent = new Intent(ChatActivity.this, ChatActivity.class);
-//                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//                    intent.putExtra("sellersId", sellersId);
-//                    intent.putExtra("itemKey", itemKey);
-//
-//                    PendingIntent pendingIntent = PendingIntent.getActivity(ChatActivity.this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-//                    builder.setContentIntent(pendingIntent);
-//
-//                    notificationManager.notify(0, builder.build());
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//
-//            }
-//        });
-//    }
 
     private String calculateTimeAgo(String dateSent) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-M-yyyy hh:mm:ss", Locale.getDefault());

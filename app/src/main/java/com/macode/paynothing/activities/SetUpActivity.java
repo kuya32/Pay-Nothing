@@ -23,8 +23,14 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GetTokenResult;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.internal.FirebaseInstanceIdInternal;
+import com.google.firebase.installations.FirebaseInstallations;
+import com.google.firebase.installations.InstallationTokenResult;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -45,7 +51,7 @@ public class SetUpActivity extends AppCompatActivity {
     private CardView setUpCardView;
     private CircleImageView profileImage;
     private TextInputLayout usernameInput, firstNameInput, lastNameInput, phoneNumberInput, cityAndStateInput;
-    private String username, firstName, lastName, phoneNumber, cityAndState;
+    private String username, firstName, lastName, phoneNumber, cityAndState, deviceToken;
     private Button saveButton;
     private Uri uri;
     private FirebaseAuth firebaseAuth;
@@ -130,28 +136,39 @@ public class SetUpActivity extends AppCompatActivity {
                         storageReference.child(firebaseUser.getUid()).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                             @Override
                             public void onSuccess(Uri uri) {
-                                HashMap hashMap = new HashMap();
-                                hashMap.put("dateUserCreated", stringDate);
-                                hashMap.put("username", username);
-                                hashMap.put("firstName", firstName);
-                                hashMap.put("lastName", lastName);
-                                hashMap.put("phoneNumber", phoneNumber);
-                                hashMap.put("profileImage", uri.toString());
-                                hashMap.put("location", cityAndState);
-                                hashMap.put("status", "Online");
+                                FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<String> task) {
+                                        if (task.isSuccessful()) {
+                                            deviceToken = task.getResult();
+                                            HashMap hashMap = new HashMap();
+                                            hashMap.put("dateUserCreated", stringDate);
+                                            hashMap.put("username", username);
+                                            hashMap.put("firstName", firstName);
+                                            hashMap.put("lastName", lastName);
+                                            hashMap.put("phoneNumber", phoneNumber);
+                                            hashMap.put("profileImage", uri.toString());
+                                            hashMap.put("location", cityAndState);
+                                            hashMap.put("deviceToken", deviceToken);
+                                            hashMap.put("status", "Online");
 
-                                databaseReference.child(firebaseUser.getUid()).updateChildren(hashMap).addOnSuccessListener(new OnSuccessListener() {
-                                    @Override
-                                    public void onSuccess(Object o) {
-                                        savingDataProgressCardView.setVisibility(View.INVISIBLE);
-                                        Intent intent = new Intent(SetUpActivity.this, MainActivity.class);
-                                        startActivity(intent);
-                                        Toast.makeText(SetUpActivity.this, "Setup profile completed!", Toast.LENGTH_SHORT).show();
-                                    }
-                                }).addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        Toast.makeText(SetUpActivity.this, e.toString(), Toast.LENGTH_SHORT).show();
+                                            databaseReference.child(firebaseUser.getUid()).updateChildren(hashMap).addOnSuccessListener(new OnSuccessListener() {
+                                                @Override
+                                                public void onSuccess(Object o) {
+                                                    savingDataProgressCardView.setVisibility(View.INVISIBLE);
+                                                    Intent intent = new Intent(SetUpActivity.this, MainActivity.class);
+                                                    startActivity(intent);
+                                                    Toast.makeText(SetUpActivity.this, "Setup profile completed!", Toast.LENGTH_SHORT).show();
+                                                }
+                                            }).addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                    Toast.makeText(SetUpActivity.this, e.toString(), Toast.LENGTH_SHORT).show();
+                                                }
+                                            });
+                                        } else {
+                                            Toast.makeText(SetUpActivity.this, task.getException().toString(), Toast.LENGTH_SHORT).show();
+                                        }
                                     }
                                 });
                             }

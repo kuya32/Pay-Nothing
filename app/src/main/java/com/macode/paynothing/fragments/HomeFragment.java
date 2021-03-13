@@ -17,6 +17,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
@@ -143,6 +144,4 @@ public class HomeFragment extends Fragment {
         itemFeedRecyclerView.setAdapter(itemsAdapter);
         itemFeedRecyclerView.setHasFixedSize(true);
     }
-
-
 }
