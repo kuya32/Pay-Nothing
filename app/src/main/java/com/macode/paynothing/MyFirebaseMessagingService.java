@@ -64,8 +64,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         Uri defaultSoundUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder = (NotificationCompat.Builder) new NotificationCompat.Builder(this, "message")
-                .setAutoCancel(true)   //Automatically delete the notification
-                .setSmallIcon(R.drawable.pay_nothing_logo) //Notification icon
+                .setAutoCancel(true)
+                .setSmallIcon(R.drawable.pay_nothing_logo)
                 .setContentIntent(pendingIntent)
                 .setContentTitle(notificationTitle)
                 .setContentText(notificationBody)
