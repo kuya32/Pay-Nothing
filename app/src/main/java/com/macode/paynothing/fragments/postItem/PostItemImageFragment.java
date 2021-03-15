@@ -4,8 +4,13 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -18,6 +23,7 @@ import androidx.fragment.app.Fragment;
 
 import android.provider.MediaStore;
 import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -31,13 +37,16 @@ import android.widget.TextView;
 import com.google.android.material.textfield.TextInputLayout;
 import com.macode.paynothing.activities.PostActivity;
 import com.macode.paynothing.R;
+import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 
 public class PostItemImageFragment extends Fragment {
 
+    private static final String TAG = "SelectPicture";
     private Toolbar postToolBar;
     private int SELECT_PHOTO = 1, RESULT_OK = -1;
     private Uri uri;
@@ -145,7 +154,10 @@ public class PostItemImageFragment extends Fragment {
             uri = data.getData();
             try {
                 Context applicationContext = PostActivity.getContextOfApplication();
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(applicationContext.getContentResolver(), uri);
+//                Bitmap bitmap = MediaStore.Images.Media.getBitmap(applicationContext.getContentResolver(), uri);
+//                bitmap = Bitmap.createScaledBitmap(bitmap, (int)(bitmap.getWidth()*0.1), (int)(bitmap.getHeight()*0.1), true);
+                Bitmap bitmap = createFile(applicationContext, uri);
+                bitmap = rotateImageIfRequired(getContext(), bitmap, uri);
                 postItemImageString = bitMapToString(bitmap);
                 postItemImageView.setImageBitmap(bitmap);
             } catch (FileNotFoundException e) {
@@ -154,6 +166,102 @@ public class PostItemImageFragment extends Fragment {
                 e.printStackTrace();
             }
         }
+    }
+
+    private static Bitmap createFile(Context context, Uri theUri) {
+        Bitmap outputBitmap = null;
+        AssetFileDescriptor fileDescriptor;
+
+        try {
+            fileDescriptor = context.getContentResolver().openAssetFileDescriptor(theUri, "r");
+
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            outputBitmap = BitmapFactory.decodeFileDescriptor(fileDescriptor.getFileDescriptor(), null, options);
+            options.inJustDecodeBounds = true;
+
+            int actualHeight = options.outHeight;
+            int actualWidth = options.outWidth;
+
+            float maxHeight = 350.0f;
+            float maxWidth = 602.0f;
+            float imgRatio = actualWidth / actualHeight;
+            float maxRatio = maxWidth / maxHeight;
+
+            if (actualHeight > maxHeight || actualWidth > maxWidth) {
+                if (imgRatio < maxRatio) {
+                    imgRatio = maxHeight / actualHeight;
+                    actualWidth = (int) (imgRatio * actualWidth);
+                    actualHeight = (int) maxHeight;
+                } else if (imgRatio > maxRatio) {
+                    imgRatio = maxWidth / actualWidth;
+                    actualHeight = (int) (imgRatio * actualHeight);
+                    actualWidth = (int) maxWidth;
+                } else {
+                    actualHeight = (int) maxHeight;
+                    actualWidth = (int) maxWidth;
+
+                }
+            }
+            options.inSampleSize = calculateInSampleSize(options, actualWidth, actualHeight);
+            options.inJustDecodeBounds = false;
+            options.inTempStorage = new byte[16 * 1024];
+            outputBitmap = BitmapFactory.decodeFileDescriptor(fileDescriptor.getFileDescriptor(), null, options);
+            if (outputBitmap != null) {
+                Log.d(TAG, "Loaded image with sample size " + options.inSampleSize + "\t\t"
+                        + "Bitmap width: " + outputBitmap.getWidth()
+                        + "\theight: " + outputBitmap.getHeight());
+            }
+            fileDescriptor.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return outputBitmap;
+    }
+
+    private static int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
+        final int height = options.outHeight;
+        final int width = options.outWidth;
+        int inSampleSize = 1;
+
+        if (height > reqHeight || width > reqWidth) {
+            final int heightRatio = Math.round((float) height / (float) reqHeight);
+            final int widthRatio = Math.round((float) width / (float) reqWidth);
+            inSampleSize = heightRatio < widthRatio ? heightRatio : widthRatio;
+        }
+        final float totalPixels = width * height;
+        final float totalReqPixelsCap = reqWidth * reqHeight * 2;
+        while (totalPixels / (inSampleSize * inSampleSize) > totalReqPixelsCap) {
+            inSampleSize++;
+        }
+
+        return inSampleSize;
+    }
+
+    private static Bitmap rotateImageIfRequired(Context context, Bitmap img, Uri selectedImage) throws IOException {
+
+        InputStream input = context.getContentResolver().openInputStream(selectedImage);
+        ExifInterface ei;
+        ei = new ExifInterface(input);
+
+        int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+
+        switch (orientation) {
+            case ExifInterface.ORIENTATION_ROTATE_90:
+                return rotateImage(img, 90);
+            case ExifInterface.ORIENTATION_ROTATE_180:
+                return rotateImage(img, 180);
+            case ExifInterface.ORIENTATION_ROTATE_270:
+                return rotateImage(img, 270);
+            default:
+                return img;
+        }
+    }
+
+    private static Bitmap rotateImage(Bitmap source, float angle) {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(angle);
+        return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(),
+                matrix, true);
     }
 
     public void imageFragmentPasser() {

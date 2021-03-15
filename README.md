@@ -4,7 +4,7 @@
 
 ## Pay Nothing Description
 
-- Pay Nothing is a trading platform where users can give away unused items or find items other users are giving away for free. 
+- Pay Nothing is a trading platform where users can give away unused items or find items other users are giving away for free.
 
 - Main reason for creating this app was to learn more about Android development.
 
