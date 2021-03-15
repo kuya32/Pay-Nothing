@@ -76,8 +76,8 @@ public class SellingMessageFragment extends Fragment {
             @Override
             protected void onBindViewHolder(@NonNull InboxChatsViewHolder holder, int position, @NonNull InboxChats model) {
                 if (firebaseUser.getUid().equals(model.getSellerId()) && !model.getMostRecentMessage().equals("No recent messages")) {
-                    if (model.getMostRecentMessage().length() > 25) {
-                        String cutMessage = model.getMostRecentMessage().substring(0, 25);
+                    if (model.getMostRecentMessage().length() > 20) {
+                        String cutMessage = model.getMostRecentMessage().substring(0, 20);
                         holder.mostRecentMessage.setText(String.format("%s...", cutMessage));
                     } else {
                         holder.mostRecentMessage.setText(model.getMostRecentMessage());

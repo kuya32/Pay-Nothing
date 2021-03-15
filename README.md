@@ -125,3 +125,4 @@
   - [Fragment Tabs inside Fragment](https://stackoverflow.com/questions/41413150/fragment-tabs-inside-fragment)
   - [Change icon color selected on bottom navigation](https://stackoverflow.com/questions/51579977/how-to-change-the-icon-color-selected-on-bottom-navigation-bar-in-android-studio)
   - [How to customize a Spinner in Android](https://stackoverflow.com/questions/16694786/how-to-customize-a-spinner-in-android)
+  - [Fix Orientation of photo](https://stackoverflow.com/questions/14066038/why-does-an-image-captured-using-camera-intent-gets-rotated-on-some-devices-on-a)

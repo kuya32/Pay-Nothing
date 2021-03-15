@@ -154,8 +154,6 @@ public class PostItemImageFragment extends Fragment {
             uri = data.getData();
             try {
                 Context applicationContext = PostActivity.getContextOfApplication();
-//                Bitmap bitmap = MediaStore.Images.Media.getBitmap(applicationContext.getContentResolver(), uri);
-//                bitmap = Bitmap.createScaledBitmap(bitmap, (int)(bitmap.getWidth()*0.1), (int)(bitmap.getHeight()*0.1), true);
                 Bitmap bitmap = createFile(applicationContext, uri);
                 bitmap = rotateImageIfRequired(getContext(), bitmap, uri);
                 postItemImageString = bitMapToString(bitmap);
