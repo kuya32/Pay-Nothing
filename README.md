@@ -1,27 +1,44 @@
-# Pay-Nothing
+<p align="center">
+  <a href="https://github.com/kuya32/Pay-Nothing">
+    <img src="images/pay_nothing_logo.png" alt="Pay Nothing Logo" width="250" height="250">
+  </a>
 
-![Github License](https://img.shields.io/badge/license-MIT-green)
+  <h3 align="center">Pay Nothing</h3>
 
-## Pay Nothing Description
+  ![Github License](https://img.shields.io/badge/license-MIT-green)
 
-- Pay Nothing is a trading platform where users can give away unused items or find items other users are giving away for free.
+  <p align="center">
+    Pay Nothing is a trading platform where users can give away unused items or find items other users are giving away for free.
+    Main reason for creating this app was to learn more about Android development.
+  </p>
+</p>
 
-- Main reason for creating this app was to learn more about Android development.
-
-## Table of content
-
-- [**Getting Started**](#getting-started)
-- [Built With](#built-with)
-- [Contributing](#contributing)
-- [License](#license)
-- [Get Help](#get-help)
-- [Motivation](#motivation)
-- [Acknowledgments](#acknowledgements)
-- [Resources](#resources)
+<details open="open">
+  <summary>Table of Contents</summary>
+  <ol>
+    <li>
+      <a href="#project-overview">Project Overview</a>
+      <ul>
+        <li><a href="#built-with">Built With</a></li>
+      </ul>
+    </li>
+    <li>
+      <a href="#getting-started">Getting Started</a>
+    </li>
+    <li><a href="##built-with">Built With</a></li>
+    <li><a href="#contributing">Contributing</a></li>
+    <li><a href="#key-takeaways">Key Takeaways</a></li>
+    <li><a href="#license">License</a></li>
+    <li><a href="#get-help">Get Help</a></li>
+    <li><a href="#motivation">Motivation</a></li>
+    <li><a href="#acknowledgements">Acknowledgements</a></li>
+    <li><a href="#resources">Resources</a></li>
+  </ol>
+</details>
 
 ## Getting started
 
-- There are a few ways to open this project.
+- There are a few ways to open this project:
 
 ### Android Studio
 
@@ -32,11 +49,6 @@
 
 1. Run `git clone git@github.com:kuya32/Pay-Nothing.git` command to clone project
 2. Open `Android Studio` and select `File | Open...` from the menu. Select cloned directory and press `Open` button
-
-### Download from the Google Play Store
-
-1. Search for Pay Nothing, logo looks like this: ![Pay Nothing Logo](images/pay_nothing_logo.png)
-2. Download the app and enjoy!
 
 ## Built With
 
@@ -55,7 +67,13 @@
 
 ## Contributing
 
-- Here are some ways to constribute to the project:
+Contributions are what make the open source community such an amazing place to be learn, inspire, and create. Any contributions you make are **greatly appreciated**.
+
+1. Fork the Project
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the Branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
 ### Pull request
 
@@ -68,6 +86,16 @@
 ### Issues
 
 - In the case of a bug report, bugfix or a suggestions, please feel very free to [open an issue.](https://github.com/kuya32/Pay-Nothing/issues)
+
+## Key Takeaways
+
+1. I got to further my unserstanding of Google Firebase authentication, cloud firestore, realtime database, storage, cloud messaging and functions.
+2. I got to learn how to send message notifications by utilizing Google Firebase Functions.
+3. I got to learn how to use different libraries to incorporate additional features for my app such as image cropping.
+4. I learned how to use tabs and switch between fragments.
+5. I learned how to handle changing sensitive information with user accounts.
+6. I learned how to create a chat room and make the user interface better.
+7. 
 
 ## License
 
