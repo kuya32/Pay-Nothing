@@ -95,7 +95,6 @@ Contributions are what make the open source community such an amazing place to b
 4. I learned how to use tabs and switch between fragments.
 5. I learned how to handle changing sensitive information with user accounts.
 6. I learned how to create a chat room and make the user interface better.
-7. 
 
 ## License
 
