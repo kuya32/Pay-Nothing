@@ -9,7 +9,6 @@
 
   <p align="center">
     Pay Nothing is a trading platform where users can give away unused items or find items other users are giving away for free.
-    Main reason for creating this app was to learn more about Android development.
   </p>
 </p>
 
@@ -112,6 +111,7 @@ Contributions are what make the open source community such an amazing place to b
 ## Motivation
 
 - Buy Nothing is a Seattle community that trades goods for free. I have been part of the Buy Nothing Magnolia group for a couple years now and its a great resource to find or sell items. As part of the Android learning process, I wanted to duplicate OfferUp/Letgo user interface and implement the Buy Nothing concept of trading free items. Through this process, I was able to learn how to incorporate multiple features of a standard app and push the limits of what I previously knew about Android development.
+- Wanted to learn more about Android development.
 
 ## Acknowledgements
 
